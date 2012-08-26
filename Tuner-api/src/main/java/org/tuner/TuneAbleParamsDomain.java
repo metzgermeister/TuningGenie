@@ -40,4 +40,8 @@ public class TuneAbleParamsDomain {
                 , start, stop, parameterName));
         this.parameterRanges.put(parameterName, new ValuesRange(start, stop));
     }
+
+    public ValuesRange getParameterRange(String parameterName) {
+        return parameterRanges.get(parameterName);
+    }
 }

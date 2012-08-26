@@ -27,6 +27,7 @@ public class ParserExample {
         Term source = TermWare.getInstance().load(fileName, parserFactory, TermFactory.createNil());
         source.print(System.out);
 
+        //TODO pivanenko implement rewriting with measurements
 
         Term reduced = reduce(source);
         printSourceCode(reduced);

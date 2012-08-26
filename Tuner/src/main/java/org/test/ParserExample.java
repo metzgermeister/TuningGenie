@@ -1,5 +1,6 @@
 package org.test;
 
+import org.tuner.TuneAbleParamsDomain;
 import ua.gradsoft.parsers.java5.JavaParserFactory;
 import ua.gradsoft.printers.java5.JavaPrinter;
 import ua.gradsoft.termware.*;
@@ -21,7 +22,8 @@ public class ParserExample {
 
         String fileName = "D:\\java_workspace\\sorting\\Tuner\\src\\main\\java\\org\\test\\Example1.java";
 
-        JavaParserFactory parserFactory = new JavaParserFactory();
+        TuneAbleParamsDomain paramsDomain = new TuneAbleParamsDomain();
+        JavaParserFactory parserFactory = new JavaParserFactory(paramsDomain);
         Term source = TermWare.getInstance().load(fileName, parserFactory, TermFactory.createNil());
         source.print(System.out);
 

@@ -1,31 +1,28 @@
 package ua.gradsoft.termware;
 
 
-import java.io.*;
-import java.math.*;
-import java.util.*;
-import java.util.logging.Logger;
-import java.util.prefs.*;
 import ua.gradsoft.termware.debug.DebugStubGenerator;
-
-import ua.gradsoft.termware.exceptions.AssertException;
-import ua.gradsoft.termware.exceptions.RuntimeAssertException;
-import ua.gradsoft.termware.exceptions.EnvException;
-import ua.gradsoft.termware.exceptions.IllegalParserNameException;
-import ua.gradsoft.termware.exceptions.IllegalPrinterNameException;
-import ua.gradsoft.termware.exceptions.InvalidStrategyNameException;
 import ua.gradsoft.termware.envs.SystemEnv;
-import ua.gradsoft.termware.exceptions.ExternalException;
-import ua.gradsoft.termware.exceptions.InvalidFactsNameException;
-import ua.gradsoft.termware.exceptions.InvalidTermLoaderClassNameException;
+import ua.gradsoft.termware.exceptions.*;
 import ua.gradsoft.termware.parsers.terms.util.TermParserFactory;
 import ua.gradsoft.termware.parsers.xml.terms.XMLTermParserFactory;
 import ua.gradsoft.termware.printers.terms.TermWarePrinterFactory;
-import ua.gradsoft.termware.util.TransformersStar;
-import ua.gradsoft.termware.util.AbstractRuleTransformer;
-import ua.gradsoft.termware.util.JavaLangReflectHelper;
 import ua.gradsoft.termware.strategies.FirstTopStrategy;
 import ua.gradsoft.termware.strategies.TopDownStrategy;
+import ua.gradsoft.termware.util.AbstractRuleTransformer;
+import ua.gradsoft.termware.util.JavaLangReflectHelper;
+import ua.gradsoft.termware.util.TransformersStar;
+
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.logging.Logger;
+import java.util.prefs.InvalidPreferencesFormatException;
+import java.util.prefs.Preferences;
 
 /**
  * Instance for TermWare-wide general work.
@@ -660,14 +657,12 @@ public class  TermWareInstance
   
  /**
   * get rounding mode, which used in ariphmetic operations.
-  *@see java.math.BigDecimal.
   */
  public int getRoundingMode()
  { return roundingMode_; }
  
  /**
   * set rounding mode, which used in ariphmetic operations.
-  *@see java.math.BigDecimal.
   */
  public void setRoundingMode(int roundingMode)
  { roundingMode_=roundingMode; }

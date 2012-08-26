@@ -22,6 +22,22 @@
             <version>2.6</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.termware</groupId>
+            <artifactId>TermWare</artifactId>
+            <version>2.3.4.mod</version>
+        </dependency>
+        <dependency>
+            <groupId>org.termware</groupId>
+            <artifactId>TermWareJPP</artifactId>
+            <version>1.1.5.mod</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-beanutils</groupId>
+            <artifactId>commons-beanutils</artifactId>
+            <version>1.8.3</version>
+        </dependency>
+
     </dependencies>
 
 

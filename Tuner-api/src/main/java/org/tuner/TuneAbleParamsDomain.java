@@ -18,19 +18,19 @@ public class TuneAbleParamsDomain {
 
     public static class ValuesRange {
         private final int start;
-        private final int finish;
+        private final int stop;
 
-        public ValuesRange(final int start, final int finish) {
+        public ValuesRange(final int start, final int stop) {
             this.start = start;
-            this.finish = finish;
+            this.stop = stop;
         }
 
         public int getStart() {
             return start;
         }
 
-        public int getFinish() {
-            return finish;
+        public int getStop() {
+            return stop;
         }
     }
 

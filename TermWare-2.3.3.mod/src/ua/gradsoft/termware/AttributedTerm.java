@@ -299,8 +299,12 @@ public class AttributedTerm extends Term implements Attributed
     
     public void print(PrintWriter out) {
         term_.print(out);
-        //out.print(" attributes:");
-        //for(int i=0; i<)
+        Term original_comment = attributes_.get("original_comment");
+        if (original_comment!= null) {
+//            out.print(" attributes:");
+            original_comment.print(out);
+        }
+
     }
     
     public void setSubtermAt(int i, Term t) throws TermWareException {

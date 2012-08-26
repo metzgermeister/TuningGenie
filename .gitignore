@@ -1,0 +1,14 @@
+target
+bin
+reports
+.classpath
+.project
+.settings
+.pmd
+*.log
+*.lck
+*.iml
+*.eml
+*.ipr
+.idea
+/out

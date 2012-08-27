@@ -1,5 +1,6 @@
 package org.test;
 
+import org.tuner.Configuration;
 import org.tuner.TuneAbleParamsDomain;
 import ua.gradsoft.parsers.java5.JavaParserFactory;
 import ua.gradsoft.printers.java5.JavaPrinter;
@@ -25,12 +26,14 @@ public class ParserExample {
         TuneAbleParamsDomain paramsDomain = new TuneAbleParamsDomain();
         JavaParserFactory parserFactory = new JavaParserFactory(paramsDomain);
         Term source = TermWare.getInstance().load(fileName, parserFactory, TermFactory.createNil());
-        source.print(System.out);
+//        source.print(System.out);
 
-        //TODO pivanenko implement rewriting with measurements
+        for (Configuration configuration : paramsDomain.getConfigurations()) {
+            Term reduced = reduce(source);
+            printSourceCode(reduced);
+//            Class.forName()
+        }
 
-        Term reduced = reduce(source);
-        printSourceCode(reduced);
 
     }
 

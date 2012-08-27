@@ -3,6 +3,8 @@ package org.tuner;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -43,5 +45,9 @@ public class TuneAbleParamsDomain {
 
     public ValuesRange getParameterRange(String parameterName) {
         return parameterRanges.get(parameterName);
+    }
+
+    public Collection<Configuration> getConfigurations(){
+        return Collections.emptyList();
     }
 }

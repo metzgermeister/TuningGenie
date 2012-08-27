@@ -8,7 +8,7 @@ import ua.gradsoft.termware.strategies.FirstTopStrategy;
 
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
-import java.util.Map;
+import java.util.List;
 
 /**
  * User: Pavlo_Ivanenko
@@ -26,23 +26,27 @@ public class ParserExample {
         TuneAbleParamsDomain paramsDomain = new TuneAbleParamsDomain();
         JavaParserFactory parserFactory = new JavaParserFactory(paramsDomain);
         Term source = TermWare.getInstance().load(fileName, parserFactory, TermFactory.createNil());
-//        source.print(System.out);
-
-        for (Map<String,String> configuration : paramsDomain.getConfigurations()) {
-            Term reduced = reduce(source);
+        source.print(System.out);
+        for (List<TuneAbleParamsDomain.ParameterConfiguration>  configuration : paramsDomain.getConfigurations()) {
+            Term reduced = reduce(source, configuration);
             printSourceCode(reduced);
-//            Class.forName()
+            System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
         }
-
 
     }
 
-    private static Term reduce(Term source) throws TermWareException {
+    private static Term reduce(Term source, List<TuneAbleParamsDomain.ParameterConfiguration> configuration) throws TermWareException {
         ITermRewritingStrategy strategy = new FirstTopStrategy();
         IFacts facts = new DefaultFacts();
         TermSystem termSystem = new
                 TermSystem(strategy, facts, TermWare.getInstance());
-        termSystem.addRule("Identifier(\"ohFindMe\")->Identifier(\"found\")");
+        for (TuneAbleParamsDomain.ParameterConfiguration parameterConfiguration : configuration) {
+            String inputTerm =  String.format("VariableDeclarator(VariableDeclaratorId(Identifier(\"%s\"),0),IntegerLiteral($whatever)) [$whatever!=%s]", parameterConfiguration.getParameterName(),parameterConfiguration.getParameterValue());
+            String outputTerm = String.format("VariableDeclarator(VariableDeclaratorId(Identifier(\"%s\"),0),IntegerLiteral(%s))", parameterConfiguration.getParameterName(), parameterConfiguration.getParameterValue());
+            String rule = String.format("%s->%s", inputTerm, outputTerm);
+            termSystem.addRule(rule);
+        }
+
         return termSystem.reduce(source);
     }
 

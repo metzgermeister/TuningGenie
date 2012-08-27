@@ -15,11 +15,11 @@ public class TuneAbleParamsDomain {
 
     private Map<String, ValuesRange> parameterRanges = new HashMap<String, ValuesRange>();
 
-    public static class ParameterValue {
+    public static class ParameterConfiguration {
         private final String parameterName;
         private final String parameterValue;
 
-        public ParameterValue(String parameterName, String parameterValue) {
+        public ParameterConfiguration(String parameterName, String parameterValue) {
 
             this.parameterName = parameterName;
             this.parameterValue = parameterValue;
@@ -64,21 +64,21 @@ public class TuneAbleParamsDomain {
     }
 
     @SuppressWarnings("unchecked")
-    public List<List<ParameterValue>> getConfigurations() {
-        List<List<ParameterValue>> toCalcProduct = fillListsToProduct();
+    public List<List<ParameterConfiguration>> getConfigurations() {
+        List<List<ParameterConfiguration>> toCalcProduct = fillListsToProduct();
         return cartesian(toCalcProduct);
     }
 
-    private List<List<ParameterValue>> fillListsToProduct() {
-        List<List<ParameterValue>> result = new LinkedList<List<ParameterValue>>();
+    private List<List<ParameterConfiguration>> fillListsToProduct() {
+        List<List<ParameterConfiguration>> result = new LinkedList<List<ParameterConfiguration>>();
 
         for (Map.Entry<String, ValuesRange> entry : parameterRanges.entrySet()) {
             ValuesRange value = entry.getValue();
-            List<ParameterValue> oneParameterValues = new LinkedList<ParameterValue>();
+            List<ParameterConfiguration> oneParameterConfigurations = new LinkedList<ParameterConfiguration>();
             for (int i = value.getStart(); i <= value.getStop(); i++) {
-                oneParameterValues.add(new ParameterValue(entry.getKey(), String.valueOf(i)));
+                oneParameterConfigurations.add(new ParameterConfiguration(entry.getKey(), String.valueOf(i)));
             }
-            result.add(oneParameterValues);
+            result.add(oneParameterConfigurations);
         }
         return result;
     }

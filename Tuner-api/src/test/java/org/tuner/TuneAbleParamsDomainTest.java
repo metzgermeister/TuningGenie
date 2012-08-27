@@ -18,7 +18,7 @@ public class TuneAbleParamsDomainTest {
         tuneAbleParamsDomain.addParameterRange("first", 0, 2);
         tuneAbleParamsDomain.addParameterRange("second", 0, 1);
 
-        List<List<TuneAbleParamsDomain.ParameterValue>> configurations = tuneAbleParamsDomain.getConfigurations();
+        List<List<TuneAbleParamsDomain.ParameterConfiguration>> configurations = tuneAbleParamsDomain.getConfigurations();
         Assert.assertEquals(6, configurations.size());
         Assert.assertTrue(assertContainsConfiguration(configurations, "first", "0", "second", "0"));
         Assert.assertTrue(assertContainsConfiguration(configurations, "first", "1", "second", "0"));
@@ -29,8 +29,8 @@ public class TuneAbleParamsDomainTest {
 
     }
 
-    private boolean assertContainsConfiguration(List<List<TuneAbleParamsDomain.ParameterValue>> configurations, String paramOne, String valueOne, String paramTwo, String valueTwo) {
-        for (List<TuneAbleParamsDomain.ParameterValue> configuration : configurations) {
+    private boolean assertContainsConfiguration(List<List<TuneAbleParamsDomain.ParameterConfiguration>> configurations, String paramOne, String valueOne, String paramTwo, String valueTwo) {
+        for (List<TuneAbleParamsDomain.ParameterConfiguration> configuration : configurations) {
             boolean containsFirst = containsParameterValue(configuration,paramOne, valueOne);
             boolean containsSecond =  containsParameterValue(configuration,paramTwo, valueTwo);
             if (containsFirst && containsSecond) {
@@ -40,8 +40,8 @@ public class TuneAbleParamsDomainTest {
         return false;
     }
 
-    private boolean containsParameterValue(List<TuneAbleParamsDomain.ParameterValue> configuration, String parameterName, String parameterValue) {
-        for (TuneAbleParamsDomain.ParameterValue value: configuration) {
+    private boolean containsParameterValue(List<TuneAbleParamsDomain.ParameterConfiguration> configuration, String parameterName, String parameterValue) {
+        for (TuneAbleParamsDomain.ParameterConfiguration value: configuration) {
             if (value.getParameterName().equals(parameterName) && value.getParameterValue().equals(parameterValue))  {
                 return true;
             }

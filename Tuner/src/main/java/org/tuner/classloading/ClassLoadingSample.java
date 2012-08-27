@@ -1,4 +1,4 @@
-package org.test;
+package org.tuner.classloading;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -10,7 +10,7 @@ import java.net.URL;
  * Date: 8/27/12
  * Time: 6:36 AM
  */
-public class ClassLoadingTest {
+public class ClassLoadingSample {
 
     public void doSmth() throws Exception {
         String fileName = "D:\\java_workspace\\sorting\\Examples\\src\\main\\java\\org\\tuner\\sample\\Example1.java";
@@ -23,10 +23,10 @@ public class ClassLoadingTest {
 
     private void loadAndRun(String fileName) throws ClassNotFoundException, NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException, MalformedURLException {
         URL url = new URL("file:d:\\java_workspace\\sorting\\out\\Example1.class");
-        ClassLoader parentClassLoader = ReloadingClassLoader.class.getClassLoader();
-        ReloadingClassLoader classLoader = new ReloadingClassLoader(parentClassLoader, url);
+        ClassLoader parentClassLoader = ReloadableClassLoader.class.getClassLoader();
+        ReloadableClassLoader classLoader = new ReloadableClassLoader(parentClassLoader, url);
 
-        Class<?> clazz = Class.forName("org.test.sample.Example1", true, classLoader);
+        Class<?> clazz = Class.forName("org.tuner.sample.Example1", true, classLoader);
         Class<? extends Runnable> runClass = clazz.asSubclass(Runnable.class);
         Constructor<? extends Runnable> ctor = runClass.getConstructor();
         Runnable doRun = ctor.newInstance();
@@ -34,6 +34,6 @@ public class ClassLoadingTest {
     }
 
     public static void main(String[] args) throws Exception {
-        new ClassLoadingTest().doSmth();
+        new ClassLoadingSample().doSmth();
     }
 }

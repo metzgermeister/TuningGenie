@@ -1,6 +1,5 @@
-package org.test;
+package org.tuner;
 
-import org.tuner.TuneAbleParamsDomain;
 import ua.gradsoft.parsers.java5.JavaParserFactory;
 import ua.gradsoft.printers.java5.JavaPrinter;
 import ua.gradsoft.termware.*;
@@ -15,7 +14,7 @@ import java.util.List;
  * Date: 8/13/12
  * Time: 3:23 PM
  */
-public class ParserExample {
+public class TuningGenie {
 
     public static void main(String[] args) throws TermWareException {
 

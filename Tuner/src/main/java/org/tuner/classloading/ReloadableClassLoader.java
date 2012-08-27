@@ -1,4 +1,4 @@
-package org.test;
+package org.tuner.classloading;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -12,12 +12,12 @@ import java.net.URLConnection;
  * Date: 8/27/12
  * Time: 7:24 AM
  */
-public class ReloadingClassLoader extends ClassLoader {
+public class ReloadableClassLoader extends ClassLoader {
 
 
     private final URL url;
 
-    public ReloadingClassLoader(ClassLoader parent, URL url) {
+    public ReloadableClassLoader(ClassLoader parent, URL url) {
         super(parent);
         this.url = url;
     }
@@ -55,7 +55,7 @@ public class ReloadingClassLoader extends ClassLoader {
 
     private boolean shouldBeLoadedBySuperClassLoader(String name) {
 //        return "java.lang.Runnable".equals(name) || "java.util.concurrent.Callable".equals(name);
-        return !name.startsWith("org.test.sample");
+        return !name.startsWith("org.tuner.sample");
     }
 
 

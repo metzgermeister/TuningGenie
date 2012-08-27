@@ -735,31 +735,31 @@ public class  TermWareInstance
   if (consSymbolIndex_==null) {
        consSymbolIndex_=SymbolTable.getSymbolTable().adoptName(TermWareSymbols.CONS_STRING,true).getIndex();
        if (!consSymbolIndex_.equals(TermWareSymbols.CONS_INDEX)) {
-           throw new RuntimeAssertException("self-test failed for CONS_INDEX");
+           throw new RuntimeAssertException("self-tuner failed for CONS_INDEX");
        }
   }
   if (setSymbolIndex_==null) {
        setSymbolIndex_=SymbolTable.getSymbolTable().adoptName(TermWareSymbols.SET_STRING,true).getIndex();
        if (!setSymbolIndex_.equals(TermWareSymbols.SET_INDEX)) {
-           throw new RuntimeAssertException("self-test failed for SET_INDEX");
+           throw new RuntimeAssertException("self-tuner failed for SET_INDEX");
        }
   }  
   if (setPatternSymbolIndex_==null) {
        setPatternSymbolIndex_=SymbolTable.getSymbolTable().adoptName(TermWareSymbols.SET_PATTERN_STRING,true).getIndex();
        if (!setPatternSymbolIndex_.equals(TermWareSymbols.SET_PATTERN_INDEX)) {
-           throw new RuntimeAssertException("self-test failed for SET_PATTERN_INDEX");
+           throw new RuntimeAssertException("self-tuner failed for SET_PATTERN_INDEX");
        }
   }  
   if (jobjectSymbolIndex_==null) {
       jobjectSymbolIndex_=SymbolTable.getSymbolTable().adoptName(TermWareSymbols.JOBJECT_STRING, true).getIndex();
       if (!jobjectSymbolIndex_.equals(TermWareSymbols.JOBJECT_INDEX)) {
-           throw new RuntimeAssertException("self-test failed for JOBJECT_INDEX");
+           throw new RuntimeAssertException("self-tuner failed for JOBJECT_INDEX");
       }
   }
   if (nilSymbolIndex_==null) {
       nilSymbolIndex_=SymbolTable.getSymbolTable().adoptName(TermWareSymbols.NIL_STRING, true).getIndex();
       if (!nilSymbolIndex_.equals(TermWareSymbols.NIL_INDEX)) {
-           throw new RuntimeAssertException("self-test failed for NIL_INDEX");
+           throw new RuntimeAssertException("self-tuner failed for NIL_INDEX");
       }
   }
   
@@ -767,22 +767,22 @@ public class  TermWareInstance
   
    Integer symbolIndex =SymbolTable.getSymbolTable().adoptName(TermWareSymbols.ACTION_STRING, true).getIndex();
    if (!symbolIndex.equals(TermWareSymbols.ACTION_INDEX)) {
-       throw new RuntimeAssertException("self-test failed for ACTION_INDEX");
+       throw new RuntimeAssertException("self-tuner failed for ACTION_INDEX");
    }
    
    symbolIndex = SymbolTable.getSymbolTable().adoptName(TermWareSymbols.ARGS_PATTERN_STRING, true).getIndex();
    if (!symbolIndex.equals(TermWareSymbols.ARGS_PATTERN_INDEX)) {
-       throw new RuntimeAssertException("self-test failed for ARGS_PATTERN_INDEX");
+       throw new RuntimeAssertException("self-tuner failed for ARGS_PATTERN_INDEX");
    }
 
    symbolIndex = SymbolTable.getSymbolTable().adoptName(TermWareSymbols.LET_STRING, true).getIndex();
    if (!symbolIndex.equals(TermWareSymbols.LET_INDEX)) {
-       throw new RuntimeAssertException("self-test failed for LET_INDEX");
+       throw new RuntimeAssertException("self-tuner failed for LET_INDEX");
    }
 
    symbolIndex = SymbolTable.getSymbolTable().adoptName(TermWareSymbols.WHERE_STRING, true).getIndex();
    if (!symbolIndex.equals(TermWareSymbols.WHERE_INDEX)) {
-       throw new RuntimeAssertException("self-test failed for WHERE_INDEX");
+       throw new RuntimeAssertException("self-tuner failed for WHERE_INDEX");
    }
    
    

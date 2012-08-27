@@ -5,6 +5,8 @@ import ua.gradsoft.printers.java5.JavaPrinter;
 import ua.gradsoft.termware.*;
 import ua.gradsoft.termware.strategies.FirstTopStrategy;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.util.List;
@@ -16,20 +18,26 @@ import java.util.List;
  */
 public class TuningGenie {
 
-    public static void main(String[] args) throws TermWareException {
+    private static final String applicationDirectory = "D:/java_workspace/sorting/Examples/";
+    private static final String outputDirectory = applicationDirectory + "/out/";
+
+    private static final String sourceFilePath = "src/main/java/org/tuner/sample/";
+    private static final String sourceFileName = "EnhancedQuickSort.java";
+    private static final String fullSourcePath = applicationDirectory + sourceFilePath + sourceFileName;
+
+    private static final String fullOutputSourcePath = outputDirectory + sourceFileName;
+
+    public static void main(String[] args) throws TermWareException, FileNotFoundException {
 
         TermWare.getInstance().init(args);
 
-        String fileName = "D:\\java_workspace\\sorting\\Examples\\src\\main\\java\\org\\tuner\\sample\\Example1.java";
-
         TuneAbleParamsDomain paramsDomain = new TuneAbleParamsDomain();
         JavaParserFactory parserFactory = new JavaParserFactory(paramsDomain);
-        Term source = TermWare.getInstance().load(fileName, parserFactory, TermFactory.createNil());
-        source.print(System.out);
+        Term source = TermWare.getInstance().load(fullSourcePath, parserFactory, TermFactory.createNil());
         for (List<TuneAbleParamsDomain.ParameterConfiguration>  configuration : paramsDomain.getConfigurations()) {
             Term reduced = reduce(source, configuration);
-            printSourceCode(reduced);
-            System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+            printSourceCode(reduced, fullOutputSourcePath);
+            System.out.println("tik");
         }
 
     }
@@ -49,11 +57,12 @@ public class TuningGenie {
         return termSystem.reduce(source);
     }
 
-    private static void printSourceCode(Term source) throws TermWareException {
-        PrintWriter printWriter = new PrintWriter(new OutputStreamWriter(System.out));
+    private static void printSourceCode(Term source, String filePath) throws TermWareException, FileNotFoundException {
+        PrintWriter printWriter = new PrintWriter(new OutputStreamWriter(new FileOutputStream(filePath)));
         JavaPrinter printer = new JavaPrinter(printWriter, "");
         printer.writeTerm(source);
         printer.flush();
+        printWriter.close();
     }
 
 

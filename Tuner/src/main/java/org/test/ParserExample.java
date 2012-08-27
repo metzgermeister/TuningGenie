@@ -1,6 +1,5 @@
 package org.test;
 
-import org.tuner.Configuration;
 import org.tuner.TuneAbleParamsDomain;
 import ua.gradsoft.parsers.java5.JavaParserFactory;
 import ua.gradsoft.printers.java5.JavaPrinter;
@@ -9,6 +8,7 @@ import ua.gradsoft.termware.strategies.FirstTopStrategy;
 
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.util.Map;
 
 /**
  * User: Pavlo_Ivanenko
@@ -21,14 +21,14 @@ public class ParserExample {
 
         TermWare.getInstance().init(args);
 
-        String fileName = "D:\\java_workspace\\sorting\\Tuner\\src\\main\\java\\org\\test\\Example1.java";
+        String fileName = "D:\\java_workspace\\sorting\\Tuner\\src\\main\\java\\org\\test\\sample\\Example1.java";
 
         TuneAbleParamsDomain paramsDomain = new TuneAbleParamsDomain();
         JavaParserFactory parserFactory = new JavaParserFactory(paramsDomain);
         Term source = TermWare.getInstance().load(fileName, parserFactory, TermFactory.createNil());
 //        source.print(System.out);
 
-        for (Configuration configuration : paramsDomain.getConfigurations()) {
+        for (Map<String,String> configuration : paramsDomain.getConfigurations()) {
             Term reduced = reduce(source);
             printSourceCode(reduced);
 //            Class.forName()

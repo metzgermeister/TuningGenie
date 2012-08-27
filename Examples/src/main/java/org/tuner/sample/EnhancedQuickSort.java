@@ -10,10 +10,10 @@ public class EnhancedQuickSort {
     public int[] sort(int[] toSort) {
 
 
-        //tuneAbleParam name=fakeWorkingTime start=100 stop=101
+        //tuneAbleParam name=fakeWorkingTime start=10 stop=12
         int fakeWorkingTime = 10;
         try {
-            Thread.sleep(fakeWorkingTime);
+            Thread.sleep(fakeWorkingTime * 1000L);
         } catch (InterruptedException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }

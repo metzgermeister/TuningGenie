@@ -1,8 +1,8 @@
- package org.test.sample;
+package org.tuner.sample;
 
 public class Example1 implements Runnable {
 
-    public void doSmthng(){
+    public void doSmthng() {
 
         //tuneAbleParam name=first start=2 stop=3
         int first = 1;

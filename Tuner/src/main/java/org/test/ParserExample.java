@@ -21,7 +21,7 @@ public class ParserExample {
 
         TermWare.getInstance().init(args);
 
-        String fileName = "D:\\java_workspace\\sorting\\Tuner\\src\\main\\java\\org\\test\\sample\\Example1.java";
+        String fileName = "D:\\java_workspace\\sorting\\Examples\\src\\main\\java\\org\\tuner\\sample\\Example1.java";
 
         TuneAbleParamsDomain paramsDomain = new TuneAbleParamsDomain();
         JavaParserFactory parserFactory = new JavaParserFactory(paramsDomain);

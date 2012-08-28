@@ -15,24 +15,7 @@ public class TuneAbleParamsDomain {
 
     private Map<String, ValuesRange> parameterRanges = new HashMap<String, ValuesRange>();
 
-    public static class ParameterConfiguration {
-        private final String parameterName;
-        private final String parameterValue;
 
-        public ParameterConfiguration(String parameterName, String parameterValue) {
-
-            this.parameterName = parameterName;
-            this.parameterValue = parameterValue;
-        }
-
-        public String getParameterName() {
-            return parameterName;
-        }
-
-        public String getParameterValue() {
-            return parameterValue;
-        }
-    }
 
     public static class ValuesRange {
         private final int start;

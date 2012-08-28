@@ -12,16 +12,14 @@ import java.net.URLConnection;
  * Date: 8/27/12
  * Time: 7:24 AM
  */
-public class ReloadableClassLoader extends ClassLoader {
+public class ReloadAbleClassLoader extends ClassLoader {
+    private URL url;
 
-
-    private final URL url;
-
-    public ReloadableClassLoader(ClassLoader parent, URL url) {
+    public ReloadAbleClassLoader(ClassLoader parent) {
         super(parent);
-        this.url = url;
     }
 
+    @Override
     public Class loadClass(String name) throws ClassNotFoundException {
         if (shouldBeLoadedBySuperClassLoader(name))
             return super.loadClass(name);
@@ -58,5 +56,11 @@ public class ReloadableClassLoader extends ClassLoader {
         return !name.startsWith("org.tuner.sample");
     }
 
+    public URL getUrl() {
+        return url;
+    }
 
+    public void setUrl(URL url) {
+        this.url = url;
+    }
 }

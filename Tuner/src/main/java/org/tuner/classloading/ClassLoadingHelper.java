@@ -1,10 +1,11 @@
 package org.tuner.classloading;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.concurrent.*;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 /**
  * User: Pavlo_Ivanenko
@@ -14,19 +15,19 @@ import java.util.concurrent.*;
 public class ClassLoadingHelper {
 
 
-    public long loadAndRun(String classFileName, String classFilePath, String wrapperFileName, String wrapperFilePath) throws ClassNotFoundException, NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException, MalformedURLException, ExecutionException, InterruptedException {
+    public long loadAndRun(String className, String classFilePath, String wrapperName, String wrapperFilePath) throws Exception {
 
         ClassLoader parentClassLoader = ReloadAbleClassLoader.class.getClassLoader();
         ReloadAbleClassLoader classLoader = new ReloadAbleClassLoader(parentClassLoader);
 
         URL sourceCLassUrl = new URL("file:" + classFilePath);
         classLoader.setUrl(sourceCLassUrl);
-        Class.forName(classFileName, true, classLoader);
+        Class.forName(className, true, classLoader);
 
 
         URL wrapperCLassUrl = new URL("file:" + wrapperFilePath);
         classLoader.setUrl(wrapperCLassUrl);
-        Class<?> wrapperClass = Class.forName(wrapperFileName, true, classLoader);
+        Class<?> wrapperClass = Class.forName(wrapperName, true, classLoader);
 
         Class<? extends Callable> runClass = wrapperClass.asSubclass(Callable.class);
         Constructor<? extends Callable> constructor = runClass.getConstructor();
@@ -40,10 +41,12 @@ public class ClassLoadingHelper {
     }
 
     public static void main(String[] args) throws Exception {
-        new ClassLoadingHelper().loadAndRun("org.tuner.sample.EnhancedQuickSort",
+        long executionTime = new ClassLoadingHelper().loadAndRun("org.tuner.sample.EnhancedQuickSort",
                 "d:/java_workspace/sorting/Examples/out/org/tuner/sample/EnhancedQuickSort.class",
                 "org.tuner.sample.EnhancedQuickSortWrapper",
                 "d:/java_workspace/sorting/Examples/out/org/tuner/sample/EnhancedQuickSortWrapper.class"
-                );
+        );
+        System.out.println(executionTime);
+        System.exit(42);
     }
 }

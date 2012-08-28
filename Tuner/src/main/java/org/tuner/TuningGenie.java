@@ -1,6 +1,7 @@
 package org.tuner;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.math.stat.StatUtils;
 import org.tuner.classloading.ClassLoadingHelper;
 import ua.gradsoft.parsers.java5.JavaParserFactory;
 import ua.gradsoft.printers.java5.JavaPrinter;
@@ -19,7 +20,9 @@ import java.util.Map;
  * Time: 3:23 PM
  */
 public class TuningGenie {
+    public static final int NUMBER_OF_PROBES = 3;
     private Runtime runtime = Runtime.getRuntime();
+
     public final String JAVA = ".java";
     public final String CLASS = ".class";
 
@@ -66,7 +69,7 @@ public class TuningGenie {
     private Map<Long, List<ParameterConfiguration>> benchmark(Term source, List<List<ParameterConfiguration>> configurations) throws Exception {
         Map<Long, List<ParameterConfiguration>> benchmarkResults = new HashMap<Long, List<ParameterConfiguration>>();
         for (List<ParameterConfiguration> configuration : configurations) {
-            System.out.println(String.format("configuration: %s",configuration));
+            System.out.println(String.format("configuration: %s", configuration));
             Term reduced = reduce(source, configuration);
 
             writeSourceCode(reduced, fullOutputSourcePath);
@@ -79,7 +82,7 @@ public class TuningGenie {
 
             Thread.sleep(1000L);
             long executionTime = execute();
-            System.out.println(String.format("execution time = %s", executionTime));
+
             benchmarkResults.put(executionTime, configuration);
             System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
         }
@@ -90,18 +93,28 @@ public class TuningGenie {
         Long optimalExecutionTime = Collections.min(benchmarkResults.keySet());
         System.out.println(String.format("optimal execution time = %s", optimalExecutionTime));
         List<ParameterConfiguration> optimalConfiguration = benchmarkResults.get(optimalExecutionTime);
-        System.out.println(String.format("Optimal configuration: %s",optimalConfiguration));
+        System.out.println(String.format("Optimal configuration: %s", optimalConfiguration));
         return optimalConfiguration;
     }
 
     private long execute() throws Exception {
+        double[] executionResults = new double[NUMBER_OF_PROBES];
+        System.out.print("execution time = ");
+        for (int i = 0; i < NUMBER_OF_PROBES; i++) {
+            long executionTime = new ClassLoadingHelper().loadAndRun(className,
+                    outputSourcePathToClass,
+                    wrapperName,
+                    outputSourceWrapperPathToClass
+            );
+            executionResults[i] = executionTime;
+            System.out.print(" " + executionTime);
+        }
+        System.out.println("");
 
-        return new ClassLoadingHelper().loadAndRun(className,
-                outputSourcePathToClass,
-                wrapperName,
-                outputSourceWrapperPathToClass
-        );
-
+        double mean = StatUtils.mean(executionResults);
+        long longMean = (long) mean;
+        System.out.println(String.format("mean = %s", longMean));
+        return longMean;
     }
 
     private void copy(String sourceFilePath, String destinationFilePath) throws IOException {

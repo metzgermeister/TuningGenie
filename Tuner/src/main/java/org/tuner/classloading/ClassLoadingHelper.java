@@ -13,6 +13,7 @@ import java.util.concurrent.Future;
  * Time: 6:36 AM
  */
 public class ClassLoadingHelper {
+    private ExecutorService pool = Executors.newFixedThreadPool(1);
 
 
     public long loadAndRun(String className, String classFilePath, String wrapperName, String wrapperFilePath) throws Exception {
@@ -33,8 +34,6 @@ public class ClassLoadingHelper {
         Constructor<? extends Callable> constructor = runClass.getConstructor();
         Callable<Long> callable = constructor.newInstance();
 
-
-        ExecutorService pool = Executors.newFixedThreadPool(3);
         Future<Long> future = pool.submit(callable);
 
         return future.get();

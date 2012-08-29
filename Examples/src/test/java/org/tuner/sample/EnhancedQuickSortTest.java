@@ -22,20 +22,14 @@ public class EnhancedQuickSortTest {
     }
 
     @Test
-    public void testNonReqQuickSort() throws Exception {
-        EnhancedQuickSort.nonReqQuick(array, 0, array.length - 1);
+    public void testEnhancedQuickSort() throws Exception {
+        EnhancedQuickSort.enhancedQuick(array, 0, array.length - 1);
         Assert.assertArrayEquals(goal, array);
     }
 
     @Test
     public void testQuickSort() throws Exception {
-        EnhancedQuickSort.quickSort(array, 0, array.length - 1);
-        Assert.assertArrayEquals(goal, array);
-    }
-
-    @Test
-    public void testEnhancedQuickSort() throws Exception {
-        EnhancedQuickSort.enhancedQuickSort(array, 0, array.length - 1);
+        EnhancedQuickSort.quick(array, 0, array.length - 1);
         Assert.assertArrayEquals(goal, array);
     }
 
@@ -49,7 +43,7 @@ public class EnhancedQuickSortTest {
     @Test
     public void testName() throws Exception {
         Random random = new Random(new Date().getTime());
-        for (int i = 0; i < 500000; i++) {
+        for (int i = 0; i < 7; i++) {
             System.out.print(random.nextInt(9999999) + " ,");
         }
     }

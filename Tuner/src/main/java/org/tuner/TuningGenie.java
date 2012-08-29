@@ -9,10 +9,7 @@ import ua.gradsoft.termware.*;
 import ua.gradsoft.termware.strategies.FirstTopStrategy;
 
 import java.io.*;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * User: Pavlo_Ivanenko
@@ -20,7 +17,7 @@ import java.util.Map;
  * Time: 3:23 PM
  */
 public class TuningGenie {
-    public static final int NUMBER_OF_PROBES = 3;
+    public static final int NUMBER_OF_PROBES = 5;
     private Runtime runtime = Runtime.getRuntime();
 
     public final String JAVA = ".java";
@@ -47,12 +44,14 @@ public class TuningGenie {
 
     public static void main(String[] args) throws Exception {
         TermWare.getInstance().init(args);
+        long start = new Date().getTime();
         new TuningGenie().tune();
+        long stop = new Date().getTime();
+        System.out.println(String.format("time spent: % sec", stop - start));
         System.exit(42);
     }
 
     public void tune() throws Exception {
-        //TODO pivanenko cleanup output directory
         TuneAbleParamsDomain paramsDomain = new TuneAbleParamsDomain();
         Term source = TermWare.getInstance().load(fullSourcePath, new JavaParserFactory(paramsDomain), TermFactory.createNil());
 
@@ -61,10 +60,12 @@ public class TuningGenie {
         Map<Long, List<ParameterConfiguration>> benchmarkResults = benchmark(source, configurations);
 
         List<ParameterConfiguration> optimalConfiguration = getOptimalConfiguration(benchmarkResults);
+        getWorstConfiguration(benchmarkResults);
 
         Term reduced = reduce(source, optimalConfiguration);
         writeSourceCode(reduced, fullOutputSourcePath);
     }
+
 
     private Map<Long, List<ParameterConfiguration>> benchmark(Term source, List<List<ParameterConfiguration>> configurations) throws Exception {
         Map<Long, List<ParameterConfiguration>> benchmarkResults = new HashMap<Long, List<ParameterConfiguration>>();
@@ -84,6 +85,8 @@ public class TuningGenie {
             long executionTime = execute();
 
             benchmarkResults.put(executionTime, configuration);
+            System.gc();
+            Thread.sleep(1000L);
             System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
         }
         return benchmarkResults;
@@ -95,6 +98,15 @@ public class TuningGenie {
         List<ParameterConfiguration> optimalConfiguration = benchmarkResults.get(optimalExecutionTime);
         System.out.println(String.format("Optimal configuration: %s", optimalConfiguration));
         return optimalConfiguration;
+    }
+
+
+    private List<ParameterConfiguration> getWorstConfiguration(Map<Long, List<ParameterConfiguration>> benchmarkResults) {
+        Long worst = Collections.min(benchmarkResults.keySet());
+        System.out.println(String.format("worst execution time = %s", worst));
+        List<ParameterConfiguration> worstConfiguration = benchmarkResults.get(worst);
+        System.out.println(String.format("worst configuration: %s", worstConfiguration));
+        return worstConfiguration;
     }
 
     private long execute() throws Exception {

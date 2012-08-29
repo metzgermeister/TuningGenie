@@ -10,81 +10,6 @@ import java.util.Stack;
 public class EnhancedQuickSort {
 
 
-    public static void enhancedQuickSort(int array[], int low, int n) {
-
-        int lo = low;
-        int hi = n;
-        if (lo >= n) {
-            return;
-        }
-        int mid = array[(lo + hi) / 2];
-        while (lo < hi) {
-            while (lo < hi && array[lo] < mid) {
-                lo = lo + 1;
-            }
-            while (lo < hi && array[hi] > mid) {
-                hi = hi - 1;
-            }
-            if (lo < hi) {
-                int T = array[lo];
-                array[lo] = array[hi];
-                array[hi] = T;
-            }
-        }
-        if (hi < lo) {
-            int T = hi;
-            hi = lo;
-            lo = T;
-        }
-
-        //tuneAbleParam name=threshold start=10 stop=50
-        int threshold = 1;
-
-        if (lo - low >= threshold) {
-            enhancedQuickSort(array, low, lo);
-        } else {
-            insertionSort(array, low, lo);
-        }
-        int rightLow = lo == low ? lo + 1 : lo;
-
-        if (lo - low >= threshold) {
-            enhancedQuickSort(array, rightLow, n);
-        } else {
-            insertionSort(array, rightLow, n);
-        }
-    }
-
-    public static void quickSort(int array[], int low, int n) {
-
-        int lo = low;
-        int hi = n;
-        if (lo >= n) {
-            return;
-        }
-        int mid = array[(lo + hi) / 2];
-        while (lo < hi) {
-            while (lo < hi && array[lo] < mid) {
-                lo = lo + 1;
-            }
-            while (lo < hi && array[hi] > mid) {
-                hi = hi - 1;
-            }
-            if (lo < hi) {
-                int T = array[lo];
-                array[lo] = array[hi];
-                array[hi] = T;
-            }
-        }
-        if (hi < lo) {
-            int T = hi;
-            hi = lo;
-            lo = T;
-        }
-        quickSort(array, low, lo);
-        int rightLow = lo == low ? lo + 1 : lo;
-        quickSort(array, rightLow, n);
-    }
-
     public static void insertionSort(int array[], int low, int n) {
         for (int i = low + 1; i < n; i = i + 1) {
             int j = i;
@@ -121,10 +46,45 @@ public class EnhancedQuickSort {
         return (pj);
     }
 
-    public static void nonReqQuick(int[] a, int lb, int ub) {
+    public static void enhancedQuick(int[] a, int lb, int ub) {
         Stack S = new Stack();
+        //tuneAbleParam name=threshold start=1 stop=50
+        int threshold = 1;
+
+        addPartitionOrSort(a, lb, ub, S, threshold);
+
+
+        while (!S.empty()) {
+            ub = (Integer) S.pop();
+            lb = (Integer) S.pop();
+            if (ub <= lb) continue;
+            int i = Partition(a, lb, ub);
+            if (i - lb > ub - i) {
+                addPartitionOrSort(a, lb, i - 1, S, threshold);
+            }
+            addPartitionOrSort(a, i + 1, ub, S, threshold);
+            if (ub - i >= i - lb) {
+                addPartitionOrSort(a, lb, i - 1, S, threshold);
+            }
+        }
+    }
+
+    private static void addPartitionOrSort(int[] a, int lb, int ub, Stack s, int threshold) {
+        if (ub - lb >= threshold) {
+            s.push(lb);
+            s.push(ub);
+        } else {
+            insertionSort(a, lb, ub);
+        }
+    }
+
+
+    public static void quick(int[] a, int lb, int ub) {
+        Stack S = new Stack();
+
         S.push(lb);
         S.push(ub);
+
         while (!S.empty()) {
             ub = (Integer) S.pop();
             lb = (Integer) S.pop();

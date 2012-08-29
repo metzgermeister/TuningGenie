@@ -14,16 +14,18 @@ public class TuneAbleParamsDomain {
 
 
     private Map<String, ValuesRange> parameterRanges = new HashMap<String, ValuesRange>();
-
+    public static final int DEFAULT_STEP = 1;
 
 
     public static class ValuesRange {
         private final int start;
         private final int stop;
+        private final int step;
 
-        public ValuesRange(final int start, final int stop) {
+        public ValuesRange(final int start, final int stop, int step) {
             this.start = start;
             this.stop = stop;
+            this.step = step;
         }
 
         public int getStart() {
@@ -33,13 +35,17 @@ public class TuneAbleParamsDomain {
         public int getStop() {
             return stop;
         }
+
+        public int getStep() {
+            return step;
+        }
     }
 
-    public void addParameterRange(String parameterName, int start, int stop) {
+    public void addParameterRange(String parameterName, int start, int stop, int step) {
         Validate.isTrue(StringUtils.isNotBlank(parameterName), "parameter name is blank");
         Validate.isTrue(stop > start, String.format("wrong bounds [{%s}, {%s}] for parameter {%s} "
                 , start, stop, parameterName));
-        this.parameterRanges.put(parameterName, new ValuesRange(start, stop));
+        this.parameterRanges.put(parameterName, new ValuesRange(start, stop, step));
     }
 
     public ValuesRange getParameterRange(String parameterName) {
@@ -58,7 +64,7 @@ public class TuneAbleParamsDomain {
         for (Map.Entry<String, ValuesRange> entry : parameterRanges.entrySet()) {
             ValuesRange value = entry.getValue();
             List<ParameterConfiguration> oneParameterConfigurations = new LinkedList<ParameterConfiguration>();
-            for (int i = value.getStart(); i <= value.getStop(); i++) {
+            for (int i = value.getStart(); i <= value.getStop(); i = i + value.getStep()) {
                 oneParameterConfigurations.add(new ParameterConfiguration(entry.getKey(), String.valueOf(i)));
             }
             result.add(oneParameterConfigurations);

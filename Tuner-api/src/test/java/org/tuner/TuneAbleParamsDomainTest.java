@@ -15,17 +15,17 @@ public class TuneAbleParamsDomainTest {
     @Test
     public void shouldGenerateConfiguration() throws Exception {
         TuneAbleParamsDomain tuneAbleParamsDomain = new TuneAbleParamsDomain();
-        tuneAbleParamsDomain.addParameterRange("first", 0, 2);
-        tuneAbleParamsDomain.addParameterRange("second", 0, 1);
+        tuneAbleParamsDomain.addParameterRange("first", 0, 2, 1);
+        tuneAbleParamsDomain.addParameterRange("second", 0, 2, 2);
 
         List<List<ParameterConfiguration>> configurations = tuneAbleParamsDomain.getConfigurations();
         Assert.assertEquals(6, configurations.size());
         Assert.assertTrue(assertContainsConfiguration(configurations, "first", "0", "second", "0"));
         Assert.assertTrue(assertContainsConfiguration(configurations, "first", "1", "second", "0"));
         Assert.assertTrue(assertContainsConfiguration(configurations, "first", "2", "second", "0"));
-        Assert.assertTrue(assertContainsConfiguration(configurations, "first", "0", "second", "1"));
-        Assert.assertTrue(assertContainsConfiguration(configurations, "first", "1", "second", "1"));
-        Assert.assertTrue(assertContainsConfiguration(configurations, "first", "2", "second", "1"));
+        Assert.assertTrue(assertContainsConfiguration(configurations, "first", "0", "second", "2"));
+        Assert.assertTrue(assertContainsConfiguration(configurations, "first", "1", "second", "2"));
+        Assert.assertTrue(assertContainsConfiguration(configurations, "first", "2", "second", "2"));
 
     }
 

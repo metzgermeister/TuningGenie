@@ -47,7 +47,7 @@ public class TuningGenie {
         long start = new Date().getTime();
         new TuningGenie().tune();
         long stop = new Date().getTime();
-        System.out.println(String.format("time spent: % sec", stop - start));
+        System.out.println(String.format("time spent: %s sec", (stop - start) / 1000));
         System.exit(42);
     }
 
@@ -74,12 +74,12 @@ public class TuningGenie {
             Term reduced = reduce(source, configuration);
 
             writeSourceCode(reduced, fullOutputSourcePath);
-            System.out.println("tuned");
+            System.out.print("tuned ");
             copy(fullSourceWrapperPath, fullOutputSourceWrapperPath);
 
             compileSource(fullOutputSourcePath);
             compileSource(fullOutputSourceWrapperPath);
-            System.out.println("compiled");
+            System.out.println(" compiled");
 
             Thread.sleep(1000L);
             long executionTime = execute();
@@ -102,7 +102,7 @@ public class TuningGenie {
 
 
     private List<ParameterConfiguration> getWorstConfiguration(Map<Long, List<ParameterConfiguration>> benchmarkResults) {
-        Long worst = Collections.min(benchmarkResults.keySet());
+        Long worst = Collections.max(benchmarkResults.keySet());
         System.out.println(String.format("worst execution time = %s", worst));
         List<ParameterConfiguration> worstConfiguration = benchmarkResults.get(worst);
         System.out.println(String.format("worst configuration: %s", worstConfiguration));

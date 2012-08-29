@@ -17,6 +17,7 @@ public class TunerPragmaProcessor {
     public static final String PRAGMA_PARAM_NAME_KEY = "name";
     public static final String START = "start";
     public static final String STOP = "stop";
+    public static final String STEP = "step";
 
     public void processPragma(String comment, TuneAbleParamsDomain paramsDomain) {
         if (StringUtils.isNotBlank(comment)) {
@@ -31,10 +32,19 @@ public class TunerPragmaProcessor {
     private void processParameter(String comment, TuneAbleParamsDomain paramsDomain) {
         String tunableParameterConfiguration = comment.replace(PRAGMA_PARAMETER_START, "");
         String parameterName = getParameterValue(tunableParameterConfiguration, PRAGMA_PARAM_NAME_KEY);
-        String start = getParameterValue(tunableParameterConfiguration, START);
-        String stop = getParameterValue(tunableParameterConfiguration, STOP);
+        String start = getRequiredParameter(tunableParameterConfiguration, START);
+        String stop = getRequiredParameter(tunableParameterConfiguration, STOP);
+        String step = getParameterValue(tunableParameterConfiguration, STEP);
+        int stepValue = step != null ? Integer.valueOf(step) : TuneAbleParamsDomain.DEFAULT_STEP;
 
-        paramsDomain.addParameterRange(parameterName, Integer.valueOf(start), Integer.valueOf(stop));
+        paramsDomain.addParameterRange(parameterName, Integer.valueOf(start), Integer.valueOf(stop), stepValue);
+
+    }
+
+    private String getRequiredParameter(String tunableParameterConfiguration, String parameterName) {
+        String parameterValue = getParameterValue(tunableParameterConfiguration, parameterName);
+        Validate.notNull(parameterValue, "missing parameter name= " + parameterName);
+        return parameterValue;
 
     }
 
@@ -49,7 +59,7 @@ public class TunerPragmaProcessor {
             }
         }
 
-        Validate.notNull(result, "missing parameter name= " + parameterName);
+
         return result;
     }
 }

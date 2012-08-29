@@ -13,7 +13,7 @@ import static junit.framework.Assert.*;
 public class TunerPragmaProcessorTest {
 
     @Test
-    public void shouldProcessPragma() throws Exception {
+    public void shouldProcessPragmaWithoutStepValue() throws Exception {
         TunerPragmaProcessor processor = new TunerPragmaProcessor();
         TuneAbleParamsDomain paramsDomain = new TuneAbleParamsDomain();
         String pragma = "//tuneAbleParam name=findMe start=2 stop=20";
@@ -22,6 +22,20 @@ public class TunerPragmaProcessorTest {
         assertNotNull(parameterRange);
         assertEquals(2, parameterRange.getStart());
         assertEquals(20, parameterRange.getStop());
+        assertEquals(1, parameterRange.getStep());
+    }
+
+    @Test
+    public void shouldProcessPragmaWithStepValue() throws Exception {
+        TunerPragmaProcessor processor = new TunerPragmaProcessor();
+        TuneAbleParamsDomain paramsDomain = new TuneAbleParamsDomain();
+        String pragma = "//tuneAbleParam name=findMe start=2 stop=20 step=7";
+        processor.processPragma(pragma, paramsDomain);
+        TuneAbleParamsDomain.ValuesRange parameterRange = paramsDomain.getParameterRange("findMe");
+        assertNotNull(parameterRange);
+        assertEquals(2, parameterRange.getStart());
+        assertEquals(20, parameterRange.getStop());
+        assertEquals(7, parameterRange.getStep());
     }
 
     @Test

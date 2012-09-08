@@ -46,35 +46,34 @@ public class EnhancedQuickSort {
         return (pj);
     }
 
-    public static void enhancedQuick(int[] a, int lb, int ub) {
-        Stack S = new Stack();
-        //tuneAbleParam name=threshold start=500 stop=5000 step=100
+    public static void enhancedQuick(int[] a, int lowerBound, int upperBound) {
+        Stack stack = new Stack();
+        //tuneAbleParam name=threshold start=1 stop=3000 step=5
         int threshold = 1;
 
-        addPartitionOrSort(a, lb, ub, S, threshold);
+        addPartitionOrSort(a, lowerBound, upperBound, stack, threshold);
 
-
-        while (!S.empty()) {
-            ub = (Integer) S.pop();
-            lb = (Integer) S.pop();
-            if (ub <= lb) continue;
-            int i = Partition(a, lb, ub);
-            if (i - lb > ub - i) {
-                addPartitionOrSort(a, lb, i - 1, S, threshold);
+        while (!stack.empty()) {
+            upperBound = (Integer) stack.pop();
+            lowerBound = (Integer) stack.pop();
+            if (upperBound <= lowerBound) continue;
+            int i = Partition(a, lowerBound, upperBound);
+            if (i - lowerBound > upperBound - i) {
+                addPartitionOrSort(a, lowerBound, i - 1, stack, threshold);
             }
-            addPartitionOrSort(a, i + 1, ub, S, threshold);
-            if (ub - i >= i - lb) {
-                addPartitionOrSort(a, lb, i - 1, S, threshold);
+            addPartitionOrSort(a, i + 1, upperBound, stack, threshold);
+            if (upperBound - i >= i - lowerBound) {
+                addPartitionOrSort(a, lowerBound, i - 1, stack, threshold);
             }
         }
     }
 
-    private static void addPartitionOrSort(int[] a, int lb, int ub, Stack s, int threshold) {
-        if (ub - lb >= threshold) {
-            s.push(lb);
-            s.push(ub);
+    private static void addPartitionOrSort(int[] array, int lowerBound, int upperBound, Stack toSort, int threshold) {
+        if (upperBound - lowerBound >= threshold) {
+            toSort.push(lowerBound);
+            toSort.push(upperBound);
         } else {
-            insertionSort(a, lb, ub);
+            insertionSort(array, lowerBound, upperBound);
         }
     }
 

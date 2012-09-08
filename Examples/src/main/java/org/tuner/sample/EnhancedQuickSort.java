@@ -47,15 +47,15 @@ public class EnhancedQuickSort {
     }
 
     public static void enhancedQuick(int[] a, int lowerBound, int upperBound) {
-        Stack stack = new Stack();
+        Stack<Integer> stack = new Stack<Integer>();
         //tuneAbleParam name=threshold start=1 stop=3000 step=5
         int threshold = 1;
 
         addPartitionOrSort(a, lowerBound, upperBound, stack, threshold);
 
         while (!stack.empty()) {
-            upperBound = (Integer) stack.pop();
-            lowerBound = (Integer) stack.pop();
+            upperBound = stack.pop();
+            lowerBound = stack.pop();
             if (upperBound <= lowerBound) continue;
             int i = Partition(a, lowerBound, upperBound);
             if (i - lowerBound > upperBound - i) {
@@ -68,7 +68,7 @@ public class EnhancedQuickSort {
         }
     }
 
-    private static void addPartitionOrSort(int[] array, int lowerBound, int upperBound, Stack toSort, int threshold) {
+    private static void addPartitionOrSort(int[] array, int lowerBound, int upperBound, Stack<Integer> toSort, int threshold) {
         if (upperBound - lowerBound >= threshold) {
             toSort.push(lowerBound);
             toSort.push(upperBound);
@@ -79,25 +79,25 @@ public class EnhancedQuickSort {
 
 
     public static void quick(int[] a, int lb, int ub) {
-        Stack S = new Stack();
+        Stack<Integer> stack = new Stack<Integer>();
 
-        S.push(lb);
-        S.push(ub);
+        stack.push(lb);
+        stack.push(ub);
 
-        while (!S.empty()) {
-            ub = (Integer) S.pop();
-            lb = (Integer) S.pop();
+        while (!stack.empty()) {
+            ub = stack.pop();
+            lb = stack.pop();
             if (ub <= lb) continue;
             int i = Partition(a, lb, ub);
             if (i - lb > ub - i) {
-                S.push(lb);
-                S.push(i - 1);
+                stack.push(lb);
+                stack.push(i - 1);
             }
-            S.push(i + 1);
-            S.push(ub);
+            stack.push(i + 1);
+            stack.push(ub);
             if (ub - i >= i - lb) {
-                S.push(lb);
-                S.push(i - 1);
+                stack.push(lb);
+                stack.push(i - 1);
             }
         }
     }

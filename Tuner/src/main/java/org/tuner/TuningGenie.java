@@ -17,7 +17,7 @@ import java.util.*;
  * Time: 3:23 PM
  */
 public class TuningGenie {
-    public static final int NUMBER_OF_PROBES = 5;
+    public static final int NUMBER_OF_PROBES = 3;
     private Runtime runtime = Runtime.getRuntime();
 
     public final String JAVA = ".java";
@@ -28,10 +28,10 @@ public class TuningGenie {
     private final String outputDirectory = applicationDirectory + "out/org/tuner/sample/";
 
     private final String sourceFilePath = "src/main/java/org/tuner/sample/";
-    private final String sourceFileName = "EnhancedQuickSort";
-    private final String className = "org.tuner.sample.EnhancedQuickSort";
-    private final String sourceFileWrapperName = "EnhancedQuickSortWrapper";
-    private final String wrapperName = "org.tuner.sample.EnhancedQuickSortWrapper";
+    private final String sourceFileName = "ParallelMergeSort";
+    private final String className = "org.tuner.sample.ParallelMergeSort";
+    private final String sourceFileWrapperName = "ParallelMergeSortWrapper";
+    private final String wrapperName = "org.tuner.sample.ParallelMergeSortWrapper";
 
     private final String fullSourcePath = applicationDirectory + sourceFilePath + sourceFileName + JAVA;
     private final String fullSourceWrapperPath = applicationDirectory + sourceFilePath + sourceFileWrapperName + JAVA;
@@ -54,7 +54,7 @@ public class TuningGenie {
     public void tune() throws Exception {
         TuneAbleParamsDomain paramsDomain = new TuneAbleParamsDomain();
         Term source = TermWare.getInstance().load(fullSourcePath, new JavaParserFactory(paramsDomain), TermFactory.createNil());
-
+        source.print(System.out);
         List<List<ParameterConfiguration>> configurations = paramsDomain.getConfigurations();
 
         Map<Long, List<ParameterConfiguration>> benchmarkResults = benchmark(source, configurations);
@@ -159,6 +159,7 @@ public class TuningGenie {
         new File(parentFolder).mkdirs();
         PrintWriter printWriter = new PrintWriter(new OutputStreamWriter(new FileOutputStream(file)));
         JavaPrinter printer = new JavaPrinter(printWriter, "");
+        source.print(System.out);
         printer.writeTerm(source);
         printer.flush();
         printWriter.close();

@@ -26,7 +26,7 @@ public class ReloadAbleClassLoader extends ClassLoader {
 
         try {
 
-            URLConnection connection = url.openConnection();
+            URLConnection connection = getConnection(name);
             InputStream input = connection.getInputStream();
             ByteArrayOutputStream buffer = new ByteArrayOutputStream();
             int data = input.read();
@@ -49,6 +49,17 @@ public class ReloadAbleClassLoader extends ClassLoader {
         }
 
         return null;
+    }
+
+    private URLConnection getConnection(String name) throws IOException {
+        if (name.contains("$")) {
+            String path = url.getPath();
+            String innerClassName = name.substring(name.indexOf("$"));
+            String innerClassPath = path.replace(".class", innerClassName + ".class");
+            return new URL("file:" + innerClassPath).openConnection();
+        } else {
+            return url.openConnection();
+        }
     }
 
     private boolean shouldBeLoadedBySuperClassLoader(String name) {

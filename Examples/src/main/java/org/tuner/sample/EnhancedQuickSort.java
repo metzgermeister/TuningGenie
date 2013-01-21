@@ -47,10 +47,10 @@ public class EnhancedQuickSort {
     }
 
     public static void enhancedQuick(int[] a, int lowerBound, int upperBound) {
-        Stack<Integer> stack = new Stack<Integer>();
-        //tuneAbleParam name=threshold start=1 stop=3000 step=5
+        Stack<Integer> stack = new Stack
+        <Integer>();
+        //tuneAbleParam name=threshold start=1 stop=300 step=50
         int threshold = 1;
-
         addPartitionOrSort(a, lowerBound, upperBound, stack, threshold);
 
         while (!stack.empty()) {

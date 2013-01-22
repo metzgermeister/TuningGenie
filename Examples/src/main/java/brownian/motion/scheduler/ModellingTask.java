@@ -10,16 +10,23 @@ import java.util.concurrent.Callable;
  * Time: 5:37 PM
  */
 public class ModellingTask implements Callable<Boolean> {
-    private final int numberOfSteps;
+    private final long numberOfSteps;
     private final Particle particle;
 
-    public ModellingTask(int numberOfSteps, Particle particle) {
+    public ModellingTask(long numberOfSteps, Particle particle) {
         this.numberOfSteps = numberOfSteps;
         this.particle = particle;
     }
 
     @Override
     public Boolean call() throws Exception {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        long start = System.nanoTime();
+        for (int i = 1; i <= numberOfSteps; i++) {
+            particle.move();
+        }
+        long stop = System.nanoTime();
+
+//        System.out.println("move for : " + numberOfSteps + " steps   " + (stop - start) / (1000 * 1000));
+        return Boolean.TRUE;
     }
 }

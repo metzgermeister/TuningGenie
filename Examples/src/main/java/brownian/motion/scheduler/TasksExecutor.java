@@ -18,28 +18,37 @@ import java.util.concurrent.TimeUnit;
 public class TasksExecutor {
 
     public static final int DEFAULT_numberOfParticles = 10;
-    public static final long DEFAULT_NUMBER_OF_ASYNCHRONOUS_STEPS = 100 * 50;
     public static final int DEFAULT_NUMBER_OF_THREADS = 10;
+    public static final long DEFAULT_NUMBER_OF_ASYNCHRONOUS_STEPS = 100 * 50;
+    public static final long DEFAULT_TOTAL_NUMBER_OF__STEPS = DEFAULT_NUMBER_OF_ASYNCHRONOUS_STEPS * 5;
     private final int numberOfParticles;
-    private final long numberOfAsynchronousSteps;
     private final int numberOfThreads;
+    private final long numberOfAsynchronousSteps;
+    private final long totalNumberOfSteps;
     private List<Particle> particles;
     private SpaceBounds bounds;
     private final Vector vector = new Vector(1, 1);
 
     Random random = new Random(new Date().getTime());
 
-    public TasksExecutor(int numberOfParticles, long numberOfAsynchronousSteps, int numberOfThreads) {
+    public TasksExecutor(int numberOfParticles, int numberOfThreads, long numberOfAsynchronousSteps, long totalNumberOfSteps) {
         this.numberOfThreads = numberOfThreads;
         this.numberOfParticles = numberOfParticles;
         this.numberOfAsynchronousSteps = numberOfAsynchronousSteps;
+        this.totalNumberOfSteps = totalNumberOfSteps;
     }
 
 
     public void performSimulation() throws InterruptedException {
         initBounds();
         initParticles(numberOfParticles);
-        simulate();
+
+        long stepsDone = 0L;
+        do {
+            simulate();
+            stepsDone += numberOfAsynchronousSteps;
+//            System.out.println("tic " + stepsDone);
+        } while (stepsDone < totalNumberOfSteps);
     }
 
     private void simulate() throws InterruptedException {
@@ -92,24 +101,26 @@ public class TasksExecutor {
 
     public static void main(String[] args) throws InterruptedException {
         int numberOfParticles = DEFAULT_numberOfParticles;
-        long numberOfAsynchronousSteps = DEFAULT_NUMBER_OF_ASYNCHRONOUS_STEPS;
         int numberOfThreads = DEFAULT_NUMBER_OF_THREADS;
-        if (args.length == 3) {
+        long numberOfAsynchronousSteps = DEFAULT_NUMBER_OF_ASYNCHRONOUS_STEPS;
+        long totalNumberOfSteps = DEFAULT_TOTAL_NUMBER_OF__STEPS;
+        if (args.length == 4) {
             numberOfParticles = Integer.parseInt(args[0]);
-            numberOfAsynchronousSteps = Integer.parseInt(args[1]);
-            numberOfThreads = Integer.parseInt(args[2]);
+            numberOfThreads = Integer.parseInt(args[1]);
+            numberOfAsynchronousSteps = Long.parseLong(args[2]);
+            totalNumberOfSteps = Long.parseLong(args[3]);
         }
 
-        System.out.println(String.format("particles:%d steps:%d threads:%d", numberOfParticles,
-                numberOfAsynchronousSteps, numberOfThreads));
-
+        System.out.println(String.format("particles:%d threads:%d asyncSteps:%d total_steps:%d", numberOfParticles,
+                numberOfThreads, numberOfAsynchronousSteps, totalNumberOfSteps));
         long start = System.nanoTime();
-        new TasksExecutor(numberOfParticles, numberOfAsynchronousSteps, numberOfThreads).performSimulation();
+        new TasksExecutor(numberOfParticles, numberOfThreads, numberOfAsynchronousSteps, totalNumberOfSteps)
+                .performSimulation();
         long stop = System.nanoTime();
 
 
-        System.out.println(String.format("particles:%d steps:%d threads:%d", numberOfParticles,
-                numberOfAsynchronousSteps, numberOfThreads));
+        System.out.println(String.format("particles:%d threads:%d asyncSteps:%d total_steps:%d", numberOfParticles,
+                numberOfThreads, numberOfAsynchronousSteps, totalNumberOfSteps));
         System.out.println("total time: " + (stop - start) / (1000 * 1000));
         System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
     }

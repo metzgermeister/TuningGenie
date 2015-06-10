@@ -41,9 +41,9 @@ public class ClassLoadingHelper {
 
     public static void main(String[] args) throws Exception {
         long executionTime = new ClassLoadingHelper().loadAndRun("org.tuner.sample.EnhancedQuickSort",
-                "d:/java_workspace/sorting/Examples/out/org/tuner/sample/EnhancedQuickSort.class",
+                "C:/Java workspace/sorting/Examples/out/org/tuner/sample/EnhancedQuickSort.class",
                 "org.tuner.sample.EnhancedQuickSortWrapper",
-                "d:/java_workspace/sorting/Examples/out/org/tuner/sample/EnhancedQuickSortWrapper.class"
+                "C:/Java workspace/sorting/Examples/out/org/tuner/sample/EnhancedQuickSortWrapper.class"
         );
         System.out.println(executionTime);
         System.exit(42);

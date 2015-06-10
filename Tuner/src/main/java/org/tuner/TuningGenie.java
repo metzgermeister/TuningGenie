@@ -23,15 +23,20 @@ public class TuningGenie {
     public final String JAVA = ".java";
     public final String CLASS = ".class";
 
-    private final String applicationDirectory = "D:/java_workspace/sorting/Examples/";
+    private final String applicationDirectory = "C:/Java workspace/sorting/Examples/";
     private final String outputClassPath = applicationDirectory + "out/";
     private final String outputDirectory = applicationDirectory + "out/org/tuner/sample/";
 
     private final String sourceFilePath = "src/main/java/org/tuner/sample/";
-    private final String sourceFileName = "ParallelMergeSort";
-    private final String className = "org.tuner.sample.ParallelMergeSort";
-    private final String sourceFileWrapperName = "ParallelMergeSortWrapper";
-    private final String wrapperName = "org.tuner.sample.ParallelMergeSortWrapper";
+//    private final String sourceFileName = "ParallelMergeSort";
+//    private final String className = "org.tuner.sample.ParallelMergeSort";
+//    private final String sourceFileWrapperName = "ParallelMergeSortWrapper";
+//    private final String wrapperName = "org.tuner.sample.ParallelMergeSortWrapper";
+
+    private final String sourceFileName = "EnhancedQuickSort";
+    private final String className = "org.tuner.sample.EnhancedQuickSort";
+    private final String sourceFileWrapperName = "EnhancedQuickSortWrapper";
+    private final String wrapperName = "org.tuner.sample.EnhancedQuickSortWrapper";
 
     private final String fullSourcePath = applicationDirectory + sourceFilePath + sourceFileName + JAVA;
     private final String fullSourceWrapperPath = applicationDirectory + sourceFilePath + sourceFileWrapperName + JAVA;

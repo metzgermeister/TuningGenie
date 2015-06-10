@@ -5,15 +5,15 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.termware</groupId>
-    <artifactId>TermWare</artifactId>
-    <version>2.3.4.mod</version>
+    <artifactId>TermWare4TG</artifactId>
+    <version>2.3.4</version>
 
     <dependencies>
-        <dependency>
-            <groupId>org.tuner</groupId>
-            <artifactId>Tuner-api</artifactId>
-            <version>1.0</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>org.tuner</groupId>-->
+            <!--<artifactId>Tuner-api</artifactId>-->
+            <!--<version>1.0</version>-->
+        <!--</dependency>-->
     </dependencies>
 
     

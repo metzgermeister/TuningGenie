@@ -23,7 +23,7 @@ public class TuningGenie {
     public final String JAVA = ".java";
     public final String CLASS = ".class";
 
-    private final String applicationDirectory = "C:/Java workspace/sorting/Examples/";
+    private final String applicationDirectory = "/Users/metzgermeister/projects/TuningGenie/Examples/";
     private final String outputClassPath = applicationDirectory + "out/";
     private final String outputDirectory = applicationDirectory + "out/org/tuner/sample/";
 
@@ -59,6 +59,7 @@ public class TuningGenie {
     public void tune() throws Exception {
         TuneAbleParamsDomain paramsDomain = new TuneAbleParamsDomain();
         Term source = TermWare.getInstance().load(fullSourcePath, new JavaParserFactory(paramsDomain), TermFactory.createNil());
+        System.out.println("initial term:");
         source.print(System.out);
         List<List<ParameterConfiguration>> configurations = paramsDomain.getConfigurations();
 

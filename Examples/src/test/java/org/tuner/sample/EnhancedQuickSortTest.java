@@ -41,7 +41,7 @@ public class EnhancedQuickSortTest {
     }
 
     @Test
-    public void testName() throws Exception {
+    public void testNothing() throws Exception {
         Random random = new Random(new Date().getTime());
         for (int i = 0; i < 7; i++) {
             System.out.print(random.nextInt(9999999) + " ,");

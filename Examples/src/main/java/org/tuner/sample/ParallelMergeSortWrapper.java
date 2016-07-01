@@ -12,12 +12,12 @@ import java.util.concurrent.Callable;
 public class ParallelMergeSortWrapper implements Callable {
 
     public void doSort() {
-        Integer[] array = generateArray(2 *  1000);
-        ParallelMergeSort.sort(array);
+        int[] array = generateArray(2 *  1000 * 1000);
+        ParallelMergeSort.parallelMergeSort(array);
     }
 
-    private Integer[] generateArray(int size) {
-        Integer[] array = new Integer[size];
+    private int[] generateArray(int size) {
+        int[] array = new int[size];
         Random random = new Random(42L);
         for (int i = 0; i < size; i++) {
             array[i] = random.nextInt(size * 100);

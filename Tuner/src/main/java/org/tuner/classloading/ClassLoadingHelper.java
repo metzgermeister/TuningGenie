@@ -14,36 +14,41 @@ import java.util.concurrent.Future;
  */
 public class ClassLoadingHelper {
     private ExecutorService pool = Executors.newFixedThreadPool(1);
-
-
-    public long loadAndRun(String className, String classFilePath, String wrapperName, String wrapperFilePath) throws Exception {
-
+    
+    
+    public long loadAndRun(ClassDefinition wrapper, ClassDefinition... definitions) throws Exception {
+        
         ClassLoader parentClassLoader = ReloadAbleClassLoader.class.getClassLoader();
         ReloadAbleClassLoader classLoader = new ReloadAbleClassLoader(parentClassLoader);
-
-        URL sourceCLassUrl = new URL("file:" + classFilePath);
-        classLoader.setUrl(sourceCLassUrl);
-        Class.forName(className, true, classLoader);
-
-
-        URL wrapperCLassUrl = new URL("file:" + wrapperFilePath);
+        
+        for (ClassDefinition definition : definitions) {
+            URL sourceCLassUrl = new URL("file:" + definition.getClassFilePath());
+            classLoader.setUrl(sourceCLassUrl);
+            Class.forName(definition.getClassName(), true, classLoader);
+            
+        }
+        
+        
+        
+        URL wrapperCLassUrl = new URL("file:" + wrapper.getClassFilePath());
         classLoader.setUrl(wrapperCLassUrl);
-        Class<?> wrapperClass = Class.forName(wrapperName, true, classLoader);
-
+        Class<?> wrapperClass = Class.forName(wrapper.getClassName(), true, classLoader);
+        
         Class<? extends Callable> runClass = wrapperClass.asSubclass(Callable.class);
         Constructor<? extends Callable> constructor = runClass.getConstructor();
         Callable<Long> callable = constructor.newInstance();
-
+        
         Future<Long> future = pool.submit(callable);
-
+        
         return future.get();
     }
-
+    
     public static void main(String[] args) throws Exception {
-        long executionTime = new ClassLoadingHelper().loadAndRun("org.tuner.sample.EnhancedQuickSort",
-                "C:/Java workspace/sorting/Examples/out/org/tuner/sample/EnhancedQuickSort.class",
-                "org.tuner.sample.EnhancedQuickSortWrapper",
-                "C:/Java workspace/sorting/Examples/out/org/tuner/sample/EnhancedQuickSortWrapper.class"
+        ClassDefinition wrapper = new ClassDefinition("org.tuner.sample.EnhancedQuickSortWrapper",
+                "/Users/metzgermeister/projects/TuningGenie/Examples/out/org/tuner/sample/EnhancedQuickSortWrapper.class");
+        long executionTime = new ClassLoadingHelper().loadAndRun(wrapper, new ClassDefinition("org.tuner.sample.EnhancedQuickSort",
+                        "/Users/metzgermeister/projects/TuningGenie/Examples/out/org/tuner/sample/EnhancedQuickSort.class")
+        
         );
         System.out.println(executionTime);
         System.exit(42);

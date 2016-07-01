@@ -19,14 +19,15 @@ public class ParallelMergeSort {
     
     public static void parallelMergeSort(int[] a) {
         //int cores = Runtime.getRuntime().availableProcessors();
+        //TODO pivanenko thread pool executor
         int threadCountNumber = 1;
         parallelMergeSort(a, threadCountNumber);
     }
     
     public static void parallelMergeSort(int[] a, final int threadCount) {
-        //tuneAbleParam name=threshold start=1 stop=30 step=10
+        //tuneAbleParam name=threshold start=1 stop=300 step=20
         int threshold = 1;
-        //tuneAbleParam name=threadCountNumber start=2 stop=16 step=2
+        //tuneAbleParam name=threadCountNumber start=1 stop=16 step=1
         if (a.length <= threshold) {
             insertionSort(a, 0, a.length);
             return;

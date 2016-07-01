@@ -34,7 +34,8 @@ import java.util.Map;
  * Time: 3:23 PM
  */
 public class TuningGenie {
-    public static final int NUMBER_OF_PROBES = 3;
+    //TODO pivanenko property file
+    public static final int NUMBER_OF_PROBES = 5;
     private Runtime runtime = Runtime.getRuntime();
     
     public final String JAVA = ".java";
@@ -104,7 +105,7 @@ public class TuningGenie {
             System.out.println("/n compiled");
             
             Thread.sleep(1000L);
-            long executionTime = execute();
+            long executionTime = execute(configuration);
             
             benchmarkResults.put(executionTime, configuration);
             System.gc();
@@ -131,7 +132,7 @@ public class TuningGenie {
         return worstConfiguration;
     }
     
-    private long execute() throws Exception {
+    private long execute(List<ParameterConfiguration> configuration) throws Exception {
         double[] executionResults = new double[NUMBER_OF_PROBES];
         System.out.print("execution time = ");
         for (int i = 0; i < NUMBER_OF_PROBES; i++) {
@@ -148,7 +149,7 @@ public class TuningGenie {
         
         double mean = StatUtils.mean(executionResults);
         long longMean = (long) mean;
-        System.out.println(String.format("mean = %s", longMean));
+        System.out.println(String.format("configuration: %s mean = %s", configuration, longMean));
         return longMean;
     }
     

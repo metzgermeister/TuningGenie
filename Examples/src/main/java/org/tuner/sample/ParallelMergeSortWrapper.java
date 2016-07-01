@@ -10,13 +10,14 @@ import java.util.concurrent.Callable;
  * Time: 1:52 PM
  */
 public class ParallelMergeSortWrapper implements Callable {
-
-    public void doSort() {
-        int[] array = generateArray(2 *  1000 * 1000);
+    
+    private static final int SIZE = 20 * 1000 * 1000;
+    
+    public void doSort(int[] array) {
         ParallelMergeSort.parallelMergeSort(array);
     }
 
-    private int[] generateArray(int size) {
+    private static int[] generateArray(int size) {
         int[] array = new int[size];
         Random random = new Random(42L);
         for (int i = 0; i < size; i++) {
@@ -28,14 +29,15 @@ public class ParallelMergeSortWrapper implements Callable {
 
     @Override
     public Object call() throws Exception {
+        int[] array = generateArray(SIZE);
         long start = new Date().getTime();
-        doSort();
+        doSort(array);
         long stop = new Date().getTime();
         return stop - start;
     }
 
     public static void main(String[] args) {
-        new ParallelMergeSortWrapper().doSort();
+        new ParallelMergeSortWrapper().doSort(generateArray(SIZE));
     }
 
 }

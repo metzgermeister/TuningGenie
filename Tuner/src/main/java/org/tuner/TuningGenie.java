@@ -34,13 +34,14 @@ import java.util.Map;
  * Time: 3:23 PM
  */
 public class TuningGenie {
-    //TODO pivanenko property file
-    public static final int NUMBER_OF_PROBES = 5;
+    
+    public static final int NUMBER_OF_PROBES = 10;
     private Runtime runtime = Runtime.getRuntime();
     
     public final String JAVA = ".java";
     public final String CLASS = ".class";
     
+    //TODO pivanenko property file  for all this configs
     private final String applicationDirectory = "/Users/metzgermeister/projects/TuningGenie/Examples/";
     private final String outputClassPath = applicationDirectory + "out/";
     private final String outputDirectory = applicationDirectory + "out/org/tuner/sample/";
@@ -89,27 +90,30 @@ public class TuningGenie {
     private Map<Long, List<ParameterConfiguration>> benchmark(Term source, List<List<ParameterConfiguration>> configurations) throws Exception {
         Map<Long, List<ParameterConfiguration>> benchmarkResults = new HashMap<Long, List<ParameterConfiguration>>();
         for (List<ParameterConfiguration> configuration : configurations) {
-            FileUtils.cleanDirectory(new File(outputDirectory));
+            File directory = new File(outputDirectory);
+            if (directory.exists()) {
+                FileUtils.cleanDirectory(directory);
+            }
             System.out.println(String.format("configuration: %s", configuration));
             Term reduced = reduce(source, configuration);
             
             writeSourceCode(reduced, fullOutputSourcePath);
-            System.out.print("/n tuned ");
+            System.out.print(" tuned ");
             copy(fullSourceWrapperPath, fullOutputSourceWrapperPath);
-            copy("/Users/metzgermeister/projects/TuningGenie/Examples/src/main/java/org/tuner/sample/SortTask.java",
-                    "/Users/metzgermeister/projects/TuningGenie/Examples/out/org/tuner/sample/SortTask.java");
+            copy(applicationDirectory + sourceFilePath + "SortTask.java",
+                    outputDirectory + "SortTask.java");
             
             compileSource(fullOutputSourcePath);
-            compileSource("/Users/metzgermeister/projects/TuningGenie/Examples/out/org/tuner/sample/SortTask.java");
+            compileSource(outputDirectory + "SortTask.java");
             compileSource(fullOutputSourceWrapperPath);
-            System.out.println("/n compiled");
+            System.out.println(" compiled");
             
-            Thread.sleep(1000L);
+            Thread.sleep(2000L);
             long executionTime = execute(configuration);
             
             benchmarkResults.put(executionTime, configuration);
             System.gc();
-            Thread.sleep(1000L);
+            Thread.sleep(2000L);
             System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
         }
         return benchmarkResults;
@@ -139,7 +143,7 @@ public class TuningGenie {
             long executionTime = new ClassLoadingHelper().loadAndRun(
                     new ClassDefinition(wrapperName, outputSourceWrapperPathToClass),
                     new ClassDefinition("org.tuner.sample.SortTask",
-                            "/Users/metzgermeister/projects/TuningGenie/Examples/out/org/tuner/sample/SortTask.class"),
+                            outputDirectory + "SortTask.class"),
                     new ClassDefinition(className, outputSourcePathToClass)
             );
             executionResults[i] = executionTime;
@@ -168,8 +172,10 @@ public class TuningGenie {
         TermSystem termSystem = new
                 TermSystem(strategy, facts, TermWare.getInstance());
         for (ParameterConfiguration parameterConfiguration : configuration) {
-            String inputTerm = String.format("VariableDeclarator(VariableDeclaratorId(Identifier(\"%s\"),0),IntegerLiteral($whatever)) [$whatever!=%s]", parameterConfiguration.getName(), parameterConfiguration.getValue());
-            String outputTerm = String.format("VariableDeclarator(VariableDeclaratorId(Identifier(\"%s\"),0),IntegerLiteral(%s))", parameterConfiguration.getName(), parameterConfiguration.getValue());
+            String inputTerm = String.format("VariableDeclarator(VariableDeclaratorId(Identifier(\"%s\"),0),IntegerLiteral($whatever)) [$whatever!=%s]", 
+                    parameterConfiguration.getName(), parameterConfiguration.getValue());
+            String outputTerm = String.format("VariableDeclarator(VariableDeclaratorId(Identifier(\"%s\"),0),IntegerLiteral(%s))", 
+                    parameterConfiguration.getName(), parameterConfiguration.getValue());
             String rule = String.format("%s->%s", inputTerm, outputTerm);
             termSystem.addRule(rule);
         }
@@ -183,7 +189,7 @@ public class TuningGenie {
         new File(parentFolder).mkdirs();
         PrintWriter printWriter = new PrintWriter(new OutputStreamWriter(new FileOutputStream(file)));
         JavaPrinter printer = new JavaPrinter(printWriter, "");
-        source.print(System.out);
+//        source.print(System.out);
         printer.writeTerm(source);
         printer.flush();
         printWriter.close();

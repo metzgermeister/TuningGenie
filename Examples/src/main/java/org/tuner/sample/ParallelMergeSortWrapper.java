@@ -11,7 +11,7 @@ import java.util.concurrent.Callable;
  */
 public class ParallelMergeSortWrapper implements Callable {
     
-    private static final int SIZE = 20 * 1000 * 1000;
+    private static final int SIZE = 10 * 1000 * 1000;
     
     public void doSort(int[] array) {
         ParallelMergeSort.parallelMergeSort(array);

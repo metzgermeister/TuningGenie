@@ -25,9 +25,9 @@ public class ParallelMergeSort {
     }
     
     public static void parallelMergeSort(int[] a, final int threadCount) {
-        //tuneAbleParam name=threshold start=1 stop=300 step=20
+        //tuneAbleParam name=threshold start=1 stop=2 step=20
         int threshold = 1;
-        //tuneAbleParam name=threadCountNumber start=1 stop=16 step=1
+        //tuneAbleParam name=threadCountNumber start=2 stop=16 step=2
         if (a.length <= threshold) {
             insertionSort(a, 0, a.length);
             return;

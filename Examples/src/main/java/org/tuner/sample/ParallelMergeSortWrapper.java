@@ -14,9 +14,9 @@ public class ParallelMergeSortWrapper implements Callable {
     private static final int SIZE = 10 * 1000 * 1000;
     
     public void doSort(int[] array) {
-        ParallelMergeSort.parallelMergeSort(array);
+        ParallelMergeSort2.parallelMergeSort(array);
     }
-
+    
     private static int[] generateArray(int size) {
         int[] array = new int[size];
         Random random = new Random(42L);
@@ -25,8 +25,8 @@ public class ParallelMergeSortWrapper implements Callable {
         }
         return array;
     }
-
-
+    
+    
     @Override
     public Object call() throws Exception {
         int[] array = generateArray(SIZE);
@@ -35,9 +35,9 @@ public class ParallelMergeSortWrapper implements Callable {
         long stop = new Date().getTime();
         return stop - start;
     }
-
+    
     public static void main(String[] args) {
         new ParallelMergeSortWrapper().doSort(generateArray(SIZE));
     }
-
+    
 }

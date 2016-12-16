@@ -35,11 +35,11 @@ import java.util.Map;
  */
 public class TuningGenie {
     
-    public static final int NUMBER_OF_PROBES = 10;
+    private static final int NUMBER_OF_PROBES = 10;
     private Runtime runtime = Runtime.getRuntime();
     
-    public final String JAVA = ".java";
-    public final String CLASS = ".class";
+    private final String JAVA = ".java";
+    private final String CLASS = ".class";
     
     //TODO pivanenko property file  for all this configs
     private final String applicationDirectory = "/Users/metzgermeister/projects/TuningGenie/Examples/";
@@ -47,8 +47,8 @@ public class TuningGenie {
     private final String outputDirectory = applicationDirectory + "out/org/tuner/sample/";
     
     private final String sourceFilePath = "src/main/java/org/tuner/sample/";
-    private final String sourceFileName = "ParallelMergeSort";
-    private final String className = "org.tuner.sample.ParallelMergeSort";
+    private final String sourceFileName = "ParallelMergeSort2";
+    private final String className = "org.tuner.sample.ParallelMergeSort2";
     private final String sourceFileWrapperName = "ParallelMergeSortWrapper";
     private final String wrapperName = "org.tuner.sample.ParallelMergeSortWrapper";
     
@@ -70,7 +70,7 @@ public class TuningGenie {
         System.exit(42);
     }
     
-    public void tune() throws Exception {
+    private void tune() throws Exception {
         TuneAbleParamsDomain paramsDomain = new TuneAbleParamsDomain();
         Term source = TermWare.getInstance().load(fullSourcePath, new JavaParserFactory(paramsDomain), TermFactory.createNil());
         System.out.println("initial term:");
@@ -100,11 +100,8 @@ public class TuningGenie {
             writeSourceCode(reduced, fullOutputSourcePath);
             System.out.print(" tuned ");
             copy(fullSourceWrapperPath, fullOutputSourceWrapperPath);
-            copy(applicationDirectory + sourceFilePath + "SortTask.java",
-                    outputDirectory + "SortTask.java");
             
             compileSource(fullOutputSourcePath);
-            compileSource(outputDirectory + "SortTask.java");
             compileSource(fullOutputSourceWrapperPath);
             System.out.println(" compiled");
             
@@ -142,8 +139,6 @@ public class TuningGenie {
         for (int i = 0; i < NUMBER_OF_PROBES; i++) {
             long executionTime = new ClassLoadingHelper().loadAndRun(
                     new ClassDefinition(wrapperName, outputSourceWrapperPathToClass),
-                    new ClassDefinition("org.tuner.sample.SortTask",
-                            outputDirectory + "SortTask.class"),
                     new ClassDefinition(className, outputSourcePathToClass)
             );
             executionResults[i] = executionTime;

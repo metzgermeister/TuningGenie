@@ -19,6 +19,7 @@ import ua.gradsoft.termware.strategies.FirstTopStrategy;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
@@ -27,6 +28,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * User: Pavlo_Ivanenko
@@ -35,7 +37,7 @@ import java.util.Map;
  */
 public class TuningGenie {
     
-    private static final int NUMBER_OF_PROBES = 10;
+    private static final int NUMBER_OF_PROBES = 5;
     private Runtime runtime = Runtime.getRuntime();
     
     private final String JAVA = ".java";
@@ -61,6 +63,8 @@ public class TuningGenie {
     private final String outputSourceWrapperPathToClass = outputDirectory + sourceFileWrapperName + CLASS;
     
     
+    private FileWriter writer;
+    
     public static void main(String[] args) throws Exception {
         TermWare.getInstance().init(args);
         long start = new Date().getTime();
@@ -71,13 +75,20 @@ public class TuningGenie {
     }
     
     private void tune() throws Exception {
+        File file = new File("/Users/metzgermeister/temp/" + new Date().getTime() + ".csv");
+        System.out.println("created output file:" + file.createNewFile());
+        writer = new FileWriter(file);
+        
         TuneAbleParamsDomain paramsDomain = new TuneAbleParamsDomain();
         Term source = TermWare.getInstance().load(fullSourcePath, new JavaParserFactory(paramsDomain), TermFactory.createNil());
-        System.out.println("initial term:");
-        source.print(System.out);
+//        System.out.print("initial term:");
+//        source.print(System.out);
         List<List<ParameterConfiguration>> configurations = paramsDomain.getConfigurations();
         
         Map<Long, List<ParameterConfiguration>> benchmarkResults = benchmark(source, configurations);
+        
+        writer.flush();
+        writer.close();
         
         List<ParameterConfiguration> optimalConfiguration = getOptimalConfiguration(benchmarkResults);
         getWorstConfiguration(benchmarkResults);
@@ -98,8 +109,8 @@ public class TuningGenie {
             Term reduced = reduce(source, configuration);
             
             writeSourceCode(reduced, fullOutputSourcePath);
-            System.out.print(" tuned ");
-            copy(fullSourceWrapperPath, fullOutputSourceWrapperPath);
+            System.out.print(" instrumented ");
+            FileUtils.copyFile(new File(fullSourceWrapperPath), new File(fullOutputSourceWrapperPath));
             
             compileSource(fullOutputSourcePath);
             compileSource(fullOutputSourceWrapperPath);
@@ -143,6 +154,7 @@ public class TuningGenie {
             );
             executionResults[i] = executionTime;
             System.out.print(" " + executionTime);
+            logResult(configuration, executionTime);
         }
         System.out.println("");
         
@@ -152,8 +164,10 @@ public class TuningGenie {
         return longMean;
     }
     
-    private void copy(String sourceFilePath, String destinationFilePath) throws IOException {
-        FileUtils.copyFile(new File(sourceFilePath), new File(destinationFilePath));
+    private void logResult(List<ParameterConfiguration> configuration, long executionTime) throws IOException {
+        writer.write(configuration.stream().map(ParameterConfiguration::getValue).collect(Collectors.joining(",")));
+        writer.write("," + executionTime + "\n");
+        writer.flush();
     }
     
     private void compileSource(String fullOutputSourcePath) throws IOException {
@@ -167,9 +181,9 @@ public class TuningGenie {
         TermSystem termSystem = new
                 TermSystem(strategy, facts, TermWare.getInstance());
         for (ParameterConfiguration parameterConfiguration : configuration) {
-            String inputTerm = String.format("VariableDeclarator(VariableDeclaratorId(Identifier(\"%s\"),0),IntegerLiteral($whatever)) [$whatever!=%s]", 
+            String inputTerm = String.format("VariableDeclarator(VariableDeclaratorId(Identifier(\"%s\"),0),IntegerLiteral($whatever)) [$whatever!=%s]",
                     parameterConfiguration.getName(), parameterConfiguration.getValue());
-            String outputTerm = String.format("VariableDeclarator(VariableDeclaratorId(Identifier(\"%s\"),0),IntegerLiteral(%s))", 
+            String outputTerm = String.format("VariableDeclarator(VariableDeclaratorId(Identifier(\"%s\"),0),IntegerLiteral(%s))",
                     parameterConfiguration.getName(), parameterConfiguration.getValue());
             String rule = String.format("%s->%s", inputTerm, outputTerm);
             termSystem.addRule(rule);

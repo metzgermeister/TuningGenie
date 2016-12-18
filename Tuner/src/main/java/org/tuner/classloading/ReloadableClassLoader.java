@@ -3,7 +3,6 @@ package org.tuner.classloading;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 
@@ -11,46 +10,58 @@ import java.net.URLConnection;
  * User: Pavlo_Ivanenko
  * Date: 8/27/12
  * Time: 7:24 AM
+ * <p>
+ * not thread safe
  */
-public class ReloadAbleClassLoader extends ClassLoader {
+public class ReloadableClassLoader extends ClassLoader {
     private URL url;
-
-    public ReloadAbleClassLoader(ClassLoader parent) {
+    
+    public ReloadableClassLoader(ClassLoader parent) {
         super(parent);
     }
-
+    
     @Override
     public Class loadClass(String name) throws ClassNotFoundException {
         if (shouldBeLoadedBySuperClassLoader(name))
             return super.loadClass(name);
-
+        
+        if (shouldBeLoadedOnlyOnce(name)) {
+            try {
+                return getParent().loadClass(name);
+            } catch (ClassNotFoundException ex) {
+                //parent can't load
+            }
+            
+            Class<?> loadedClass = findLoadedClass(name);
+            if (loadedClass != null) {
+                return loadedClass;
+            }
+        }
         try {
-
+            
             URLConnection connection = getConnection(name);
             InputStream input = connection.getInputStream();
             ByteArrayOutputStream buffer = new ByteArrayOutputStream();
             int data = input.read();
-
+            
             while (data != -1) {
                 buffer.write(data);
                 data = input.read();
             }
-
+            
             input.close();
-
+            
             byte[] classData = buffer.toByteArray();
-
+            
             return defineClass(name, classData, 0, classData.length);
-
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
+            
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+        
         return null;
     }
-
+    
     private URLConnection getConnection(String name) throws IOException {
         if (name.contains("$")) {
             String path = url.getPath();
@@ -61,16 +72,20 @@ public class ReloadAbleClassLoader extends ClassLoader {
             return url.openConnection();
         }
     }
-
+    
     private boolean shouldBeLoadedBySuperClassLoader(String name) {
 //        return "java.lang.Runnable".equals(name) || "java.util.concurrent.Callable".equals(name);
         return !name.startsWith("org.tuner.sample");
     }
-
+    
+    private boolean shouldBeLoadedOnlyOnce(String name) {
+        return "org.tuner.sample.PoolCache".equals(name);
+    }
+    
     public URL getUrl() {
         return url;
     }
-
+    
     public void setUrl(URL url) {
         this.url = url;
     }

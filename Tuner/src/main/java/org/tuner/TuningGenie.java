@@ -1,6 +1,7 @@
 package org.tuner;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.output.NullWriter;
 import org.apache.commons.math.stat.StatUtils;
 import org.tuner.classloading.ClassDefinition;
 import org.tuner.classloading.ClassLoadingHelper;
@@ -23,6 +24,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.io.Writer;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -63,7 +65,9 @@ public class TuningGenie {
     private final String outputSourceWrapperPathToClass = outputDirectory + sourceFileWrapperName + CLASS;
     
     
-    private FileWriter writer;
+    private Writer writer;
+    private ClassLoadingHelper genericCLHelper = new ClassLoadingHelper();
+    private final static Boolean outputResultsToFile = false;
     
     public static void main(String[] args) throws Exception {
         TermWare.getInstance().init(args);
@@ -75,9 +79,9 @@ public class TuningGenie {
     }
     
     private void tune() throws Exception {
-        File file = new File("/Users/metzgermeister/temp/" + new Date().getTime() + ".csv");
-        System.out.println("created output file:" + file.createNewFile());
-        writer = new FileWriter(file);
+        
+        writer = buildWriter();
+        
         
         TuneAbleParamsDomain paramsDomain = new TuneAbleParamsDomain();
         Term source = TermWare.getInstance().load(fullSourcePath, new JavaParserFactory(paramsDomain), TermFactory.createNil());
@@ -85,6 +89,7 @@ public class TuningGenie {
 //        source.print(System.out);
         List<List<ParameterConfiguration>> configurations = paramsDomain.getConfigurations();
         
+        loadGenericClasses();
         Map<Long, List<ParameterConfiguration>> benchmarkResults = benchmark(source, configurations);
         
         writer.flush();
@@ -97,14 +102,38 @@ public class TuningGenie {
         writeSourceCode(reduced, fullOutputSourcePath);
     }
     
+    private Writer buildWriter() throws IOException {
+        if (outputResultsToFile) {
+            File file = new File("/Users/metzgermeister/temp/tuningGenie_" + new Date().getTime() + ".csv");
+            System.out.println("created output file:" + file.createNewFile());
+            return new FileWriter(file);
+        } else {
+            return new NullWriter();
+        }
+    }
+    
+    private void loadGenericClasses() throws Exception {
+        copyAndCompileCache();
+        genericCLHelper.load(new ClassDefinition("org.tuner.sample.PoolCache",
+                outputDirectory + "PoolCache.class"));
+    }
+    
+    private void copyAndCompileCache() throws IOException {
+        FileUtils.copyFile(new File(applicationDirectory + sourceFilePath + "PoolCache.java"),
+                new File(outputDirectory + "PoolCache.java"));
+        
+        compileSource(outputDirectory + "PoolCache.java");
+    }
+    
     
     private Map<Long, List<ParameterConfiguration>> benchmark(Term source, List<List<ParameterConfiguration>> configurations) throws Exception {
-        Map<Long, List<ParameterConfiguration>> benchmarkResults = new HashMap<Long, List<ParameterConfiguration>>();
+        Map<Long, List<ParameterConfiguration>> benchmarkResults = new HashMap<>();
         for (List<ParameterConfiguration> configuration : configurations) {
             File directory = new File(outputDirectory);
             if (directory.exists()) {
                 FileUtils.cleanDirectory(directory);
             }
+            copyAndCompileCache();
             System.out.println(String.format("configuration: %s", configuration));
             Term reduced = reduce(source, configuration);
             
@@ -148,7 +177,8 @@ public class TuningGenie {
         double[] executionResults = new double[NUMBER_OF_PROBES];
         System.out.print("execution time = ");
         for (int i = 0; i < NUMBER_OF_PROBES; i++) {
-            long executionTime = new ClassLoadingHelper().loadAndRun(
+            ClassLoadingHelper clHelper = new ClassLoadingHelper(genericCLHelper.getClassLoader());
+            long executionTime = clHelper.loadAndRun(
                     new ClassDefinition(wrapperName, outputSourceWrapperPathToClass),
                     new ClassDefinition(className, outputSourcePathToClass)
             );

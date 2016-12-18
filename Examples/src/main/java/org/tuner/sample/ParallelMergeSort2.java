@@ -24,7 +24,7 @@ public class ParallelMergeSort2 {
         //tuneAbleParam name=parallelism start=10 stop=20 step=5
         int parallelism = 1;
     
-        ForkJoinPool pool = new ForkJoinPool(parallelism);
+        ForkJoinPool pool = PoolCache.get(parallelism);
         ForkJoinTask<Void> job = pool.submit(new MergeSortTask(array));
         job.join();
         
@@ -40,10 +40,10 @@ public class ParallelMergeSort2 {
         
         @Override
         protected void compute() {
-            //tuneAbleParam name=insertionSortThreshold start=100 stop=200 step=300
+            //tuneAbleParam name=insertionSortThreshold start=100 stop=150 step=300
             int insertionSortThreshold = 100;
             
-            //tuneAbleParam name=mergeSortBucketSize start=500000 stop=10000000 step=500000
+            //tuneAbleParam name=mergeSortBucketSize start=1000000 stop=10000000 step=1000000
             int mergeSortBucketSize = 50000;
             
             if (array.length <= insertionSortThreshold) {

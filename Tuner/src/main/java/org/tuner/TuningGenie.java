@@ -40,6 +40,7 @@ import java.util.stream.Collectors;
 public class TuningGenie {
     
     private static final int NUMBER_OF_PROBES = 5;
+    private static final String STATS_OUTPUT_DIR = "/Users/metzgermeister/temp/";
     private Runtime runtime = Runtime.getRuntime();
     
     private final String JAVA = ".java";
@@ -65,9 +66,9 @@ public class TuningGenie {
     private final String outputSourceWrapperPathToClass = outputDirectory + sourceFileWrapperName + CLASS;
     
     
+    private final static Boolean outputResultsToFile = true;
     private Writer writer;
     private ClassLoadingHelper genericCLHelper = new ClassLoadingHelper();
-    private final static Boolean outputResultsToFile = false;
     
     public static void main(String[] args) throws Exception {
         TermWare.getInstance().init(args);
@@ -104,7 +105,7 @@ public class TuningGenie {
     
     private Writer buildWriter() throws IOException {
         if (outputResultsToFile) {
-            File file = new File("/Users/metzgermeister/temp/tuningGenie_" + new Date().getTime() + ".csv");
+            File file = new File(STATS_OUTPUT_DIR + "tuner_" + new Date().getTime() + ".csv");
             System.out.println("created output file:" + file.createNewFile());
             return new FileWriter(file);
         } else {

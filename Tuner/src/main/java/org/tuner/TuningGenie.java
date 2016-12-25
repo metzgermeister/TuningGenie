@@ -1,7 +1,8 @@
 package org.tuner;
 
+import org.tuner.benchmark.BenchmarkConfiguration;
+import org.tuner.benchmark.BenchmarkMaster;
 import ua.gradsoft.parsers.java5.JavaParserFactory;
-import ua.gradsoft.termware.Term;
 import ua.gradsoft.termware.TermFactory;
 import ua.gradsoft.termware.TermWare;
 
@@ -19,7 +20,6 @@ import static org.tuner.Config.fullSourcePath;
  */
 public class TuningGenie {
     
-    
     public static void main(String[] args) throws Exception {
         TermWare.getInstance().init(args);
         long start = new Date().getTime();
@@ -31,11 +31,11 @@ public class TuningGenie {
     
     private void tune() throws Exception {
         TuneAbleParamsDomain paramsDomain = new TuneAbleParamsDomain();
-        Term source = TermWare.getInstance().load(fullSourcePath, new JavaParserFactory(paramsDomain), TermFactory.createNil());
+        TermWare.getInstance().load(fullSourcePath, new JavaParserFactory(paramsDomain), TermFactory.createNil());
 //        System.out.print("initial term:");
 //        source.print(System.out);
         List<List<ParameterConfiguration>> configurations = paramsDomain.getConfigurations();
-        Map<Long, List<ParameterConfiguration>> benchmarkResults = benchmark(source, configurations);
+        Map<Long, List<ParameterConfiguration>> benchmarkResults = benchmark(configurations);
         
         findOptimalConfigturation(benchmarkResults);
         findWorstConfiguration(benchmarkResults);
@@ -45,8 +45,8 @@ public class TuningGenie {
     }
     
     
-    private Map<Long, List<ParameterConfiguration>> benchmark(Term source, List<List<ParameterConfiguration>> configurations) throws Exception {
-        return new BenchmarkRunner().benchmark(source, configurations);
+    private Map<Long, List<ParameterConfiguration>> benchmark(List<List<ParameterConfiguration>> configurations) throws Exception {
+        return new BenchmarkMaster().benchmark(new BenchmarkConfiguration(configurations, fullSourcePath));
     }
     
     private List<ParameterConfiguration> findOptimalConfigturation(Map<Long, List<ParameterConfiguration>> benchmarkResults) {

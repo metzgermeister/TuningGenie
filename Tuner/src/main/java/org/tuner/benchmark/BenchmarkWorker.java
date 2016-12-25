@@ -1,15 +1,21 @@
-package org.tuner;
+package org.tuner.benchmark;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.output.NullWriter;
+import org.apache.commons.lang3.Validate;
 import org.apache.commons.math.stat.StatUtils;
+import org.tuner.ParameterConfiguration;
+import org.tuner.TuneAbleParamsDomain;
 import org.tuner.classloading.ClassDefinition;
 import org.tuner.classloading.ClassLoadingHelper;
+import ua.gradsoft.parsers.java5.JavaParserFactory;
 import ua.gradsoft.printers.java5.JavaPrinter;
 import ua.gradsoft.termware.DefaultFacts;
 import ua.gradsoft.termware.IFacts;
 import ua.gradsoft.termware.ITermRewritingStrategy;
 import ua.gradsoft.termware.Term;
+import ua.gradsoft.termware.TermFactory;
 import ua.gradsoft.termware.TermSystem;
 import ua.gradsoft.termware.TermWare;
 import ua.gradsoft.termware.TermWareException;
@@ -31,8 +37,8 @@ import java.util.stream.Collectors;
 
 import static org.tuner.Config.NUMBER_OF_PROBES;
 import static org.tuner.Config.STATS_OUTPUT_DIR;
-import static org.tuner.Config.applicationDirectory;
 import static org.tuner.Config.className;
+import static org.tuner.Config.examplesProjectDirectory;
 import static org.tuner.Config.fullOutputSourcePath;
 import static org.tuner.Config.fullOutputSourceWrapperPath;
 import static org.tuner.Config.fullSourceWrapperPath;
@@ -45,19 +51,32 @@ import static org.tuner.Config.sourceFilePath;
 import static org.tuner.Config.wrapperName;
 
 
-class BenchmarkRunner {
+class BenchmarkWorker {
     private Writer writer;
     private ClassLoadingHelper genericCLHelper = new ClassLoadingHelper();
     private Runtime runtime = Runtime.getRuntime();
     
+    public static void main(String[] args) throws Exception {
+        Validate.isTrue(args.length == 1, "unexpected arguments");
+        String pathTobenchmarkConfig = args[0];
+        BenchmarkConfiguration config = new ObjectMapper()
+                .readValue(new File(pathTobenchmarkConfig), BenchmarkConfiguration.class);
+        
+        TermWare.getInstance().init(args);
+        Term source = TermWare.getInstance()
+                .load(config.getPathToFileToTune(), new JavaParserFactory(new TuneAbleParamsDomain()), TermFactory.createNil());
+        //TODO pivanenko batching + notification about completion
+        Map<Long, List<ParameterConfiguration>> benchmark = new BenchmarkWorker().benchmark(source, config);
+        System.exit(42);
+    }
     
-    Map<Long, List<ParameterConfiguration>> benchmark(Term source, List<List<ParameterConfiguration>> configurations) throws Exception {
+    public Map<Long, List<ParameterConfiguration>> benchmark(Term source, BenchmarkConfiguration config) throws Exception {
         writer = buildWriter();
         
         loadGenericClasses();
         
         Map<Long, List<ParameterConfiguration>> benchmarkResults = new HashMap<>();
-        for (List<ParameterConfiguration> configuration : configurations) {
+        for (List<ParameterConfiguration> configuration : config.getConfigurationsToRun()) {
             File directory = new File(outputDirectory);
             if (directory.exists()) {
                 FileUtils.cleanDirectory(directory);
@@ -95,7 +114,7 @@ class BenchmarkRunner {
     }
     
     private void copyAndCompileCache() throws IOException {
-        FileUtils.copyFile(new File(applicationDirectory + sourceFilePath + "PoolCache.java"),
+        FileUtils.copyFile(new File(examplesProjectDirectory + sourceFilePath + "PoolCache.java"),
                 new File(outputDirectory + "PoolCache.java"));
         
         compileSource(outputDirectory + "PoolCache.java");

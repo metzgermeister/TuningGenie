@@ -58,15 +58,19 @@ class BenchmarkWorker {
     
     public static void main(String[] args) throws Exception {
         Validate.isTrue(args.length == 1, "unexpected arguments");
-        String pathTobenchmarkConfig = args[0];
-        BenchmarkConfiguration config = BenchmarkUtils.read(pathTobenchmarkConfig, BenchmarkConfiguration.class);
+        
+        BenchmarkUtils.cleanupBenchmarkCompletionFile();
+        String pathToBenchmarkConfig = args[0];
+        BenchmarkConfiguration config = BenchmarkUtils.read(pathToBenchmarkConfig, BenchmarkConfiguration.class);
         
         TermWare.getInstance().init(args);
         Term source = TermWare.getInstance()
                 .load(config.getPathToFileToTune(), new JavaParserFactory(new TuneAbleParamsDomain()), TermFactory.createNil());
-        //TODO pivanenko batching + notification about completion
+        //TODO pivanenko batching
+        //TODO pivanenko logging
         BenchmarkResults results = new BenchmarkWorker().benchmark(source, config);
         BenchmarkUtils.write(results, Config.BENCHMARK_CONFIG_RESULTS);
+        BenchmarkUtils.writeBenchmarkCompletionFile();
         System.exit(42);
     }
     

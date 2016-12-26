@@ -35,7 +35,8 @@ public class TuningGenie {
 //        System.out.print("initial term:");
 //        source.print(System.out);
         List<List<ParameterConfiguration>> configurations = paramsDomain.getConfigurations();
-        Map<Long, List<ParameterConfiguration>> benchmarkResults = benchmark(configurations);
+        Map<Long, List<ParameterConfiguration>> benchmarkResults = new BenchmarkMaster()
+                .benchmark(new BenchmarkConfiguration(configurations, fullSourcePath));
         
         findOptimalConfigturation(benchmarkResults);
         findWorstConfiguration(benchmarkResults);
@@ -44,10 +45,6 @@ public class TuningGenie {
 //        writeSourceCode(reduced, fullOutputSourcePath);
     }
     
-    
-    private Map<Long, List<ParameterConfiguration>> benchmark(List<List<ParameterConfiguration>> configurations) throws Exception {
-        return new BenchmarkMaster().benchmark(new BenchmarkConfiguration(configurations, fullSourcePath));
-    }
     
     private List<ParameterConfiguration> findOptimalConfigturation(Map<Long, List<ParameterConfiguration>> benchmarkResults) {
         Long optimalExecutionTime = Collections.min(benchmarkResults.keySet());

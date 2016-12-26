@@ -66,7 +66,6 @@ class BenchmarkWorker {
         TermWare.getInstance().init(args);
         Term source = TermWare.getInstance()
                 .load(config.getPathToFileToTune(), new JavaParserFactory(new TuneAbleParamsDomain()), TermFactory.createNil());
-        //TODO pivanenko batching
         //TODO pivanenko logging
         BenchmarkResults results = new BenchmarkWorker().benchmark(source, config);
         BenchmarkUtils.write(results, Config.BENCHMARK_CONFIG_RESULTS);

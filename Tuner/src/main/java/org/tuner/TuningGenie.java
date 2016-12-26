@@ -36,7 +36,7 @@ public class TuningGenie {
 //        source.print(System.out);
         List<List<ParameterConfiguration>> configurations = paramsDomain.getConfigurations();
         Map<Long, List<ParameterConfiguration>> benchmarkResults = new BenchmarkMaster()
-                .benchmark(new BenchmarkConfiguration(configurations, fullSourcePath));
+                .benchmark(configurations, fullSourcePath);
         
         findOptimalConfigturation(benchmarkResults);
         findWorstConfiguration(benchmarkResults);

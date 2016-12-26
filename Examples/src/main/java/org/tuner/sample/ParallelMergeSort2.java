@@ -40,7 +40,7 @@ public class ParallelMergeSort2 {
         
         @Override
         protected void compute() {
-            //tuneAbleParam name=insertionSortThreshold start=10 stop=20 step=10
+            //tuneAbleParam name=insertionSortThreshold start=10 stop=200 step=10
             int insertionSortThreshold = 100;
             
             //tuneAbleParam name=mergeSortBucketSize start=10000000 stop=10000001 step=500000

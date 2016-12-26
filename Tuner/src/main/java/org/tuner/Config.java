@@ -4,7 +4,7 @@ public final class Config {
     private Config() {
     }
     
-    public static final int NUMBER_OF_PROBES = 5;
+    public static final int NUMBER_OF_PROBES = 10;
     
     public static final String BENCHMARK_WORKING_DIRECTORY = "/Users/metzgermeister/temp/tuner/";
     public static final String BENCHMARK_CONFIG_TO_RUN = BENCHMARK_WORKING_DIRECTORY + "configToRun.json";
@@ -12,6 +12,7 @@ public final class Config {
     public static final String BENCHMARK_COMPLETION_FILE = BENCHMARK_WORKING_DIRECTORY + "configWasProbed.txt";
     public static final long BENCHMARK_STATUS_CHECK_TIMEOUT = 5000;
     public static final long BENCHMARK_STATUS_MAX_WAIT_TIMEOUT = 15 * 60 * 1000;
+    public static final int BENCHMARK_CONFIGURATION_BATCH_SIZE = 20;
     
     public static final String STATS_OUTPUT_DIR = BENCHMARK_WORKING_DIRECTORY + "rawResults/";
     

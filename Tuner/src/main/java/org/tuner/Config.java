@@ -7,6 +7,7 @@ public final class Config {
     public static final int NUMBER_OF_PROBES = 5;
     public static final String BENCHMARK_WORKING_DIRECTORY = "/Users/metzgermeister/temp/tuner/";
     public static final String BENCHMARK_CONFIG_TO_RUN = BENCHMARK_WORKING_DIRECTORY + "configToRun.json";
+    public static final String BENCHMARK_CONFIG_RESULTS = BENCHMARK_WORKING_DIRECTORY + "configResults.json";
     public static final String STATS_OUTPUT_DIR = BENCHMARK_WORKING_DIRECTORY + "rawResults/";
     
     public static final String JAVA = ".java";

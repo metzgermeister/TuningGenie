@@ -1,10 +1,10 @@
 package org.tuner.benchmark;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.output.NullWriter;
 import org.apache.commons.lang3.Validate;
 import org.apache.commons.math.stat.StatUtils;
+import org.tuner.Config;
 import org.tuner.ParameterConfiguration;
 import org.tuner.TuneAbleParamsDomain;
 import org.tuner.classloading.ClassDefinition;
@@ -59,18 +59,19 @@ class BenchmarkWorker {
     public static void main(String[] args) throws Exception {
         Validate.isTrue(args.length == 1, "unexpected arguments");
         String pathTobenchmarkConfig = args[0];
-        BenchmarkConfiguration config = new ObjectMapper()
-                .readValue(new File(pathTobenchmarkConfig), BenchmarkConfiguration.class);
+        BenchmarkConfiguration config = BenchmarkUtils.read(pathTobenchmarkConfig, BenchmarkConfiguration.class);
         
         TermWare.getInstance().init(args);
         Term source = TermWare.getInstance()
                 .load(config.getPathToFileToTune(), new JavaParserFactory(new TuneAbleParamsDomain()), TermFactory.createNil());
         //TODO pivanenko batching + notification about completion
-        Map<Long, List<ParameterConfiguration>> benchmark = new BenchmarkWorker().benchmark(source, config);
+        BenchmarkResults results = new BenchmarkWorker().benchmark(source, config);
+        BenchmarkUtils.write(results, Config.BENCHMARK_CONFIG_RESULTS);
         System.exit(42);
     }
     
-    public Map<Long, List<ParameterConfiguration>> benchmark(Term source, BenchmarkConfiguration config) throws Exception {
+    
+    public BenchmarkResults benchmark(Term source, BenchmarkConfiguration config) throws Exception {
         writer = buildWriter();
         
         loadGenericClasses();
@@ -104,7 +105,9 @@ class BenchmarkWorker {
         
         writer.flush();
         writer.close();
-        return benchmarkResults;
+        BenchmarkResults results = new BenchmarkResults();
+        results.setResults(benchmarkResults);
+        return results;
     }
     
     private void loadGenericClasses() throws Exception {

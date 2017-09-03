@@ -1,6 +1,5 @@
 package org.tuner;
 
-import org.tuner.benchmark.BenchmarkConfiguration;
 import org.tuner.benchmark.BenchmarkMaster;
 import ua.gradsoft.parsers.java5.JavaParserFactory;
 import ua.gradsoft.termware.TermFactory;

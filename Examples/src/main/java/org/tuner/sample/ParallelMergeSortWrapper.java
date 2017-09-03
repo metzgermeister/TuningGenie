@@ -4,16 +4,11 @@ import java.util.Date;
 import java.util.Random;
 import java.util.concurrent.Callable;
 
-/**
- * User: Pavlo_Ivanenko
- * Date: 10/15/12
- * Time: 1:52 PM
- */
 public class ParallelMergeSortWrapper implements Callable {
     
     private static final int SIZE = 10 * 1000 * 1000;
     
-    public void doSort(int[] array) {
+    private void doSort(int[] array) {
         ParallelMergeSort2.parallelMergeSort(array);
     }
     

@@ -31,12 +31,13 @@ public class ParallelMergeSort2 {
     }
     
     private static class MergeSortTask extends RecursiveAction {
+
+        private static final long serialVersionUID = -2998426627022866737L;
         private final int[] array;
-        
-        public MergeSortTask(int a[]) {
-            this.array = a;
+
+        MergeSortTask(int arrayToSort[]) {
+            this.array = arrayToSort;
         }
-        
         
         @Override
         protected void compute() {
@@ -49,7 +50,7 @@ public class ParallelMergeSort2 {
             if (array.length <= insertionSortThreshold) {
                 insertionSort(array, 0, array.length);
             } else if (array.length <= mergeSortBucketSize) {
-                sequentialMergeSort(array);
+                sequentialMergeSort(array, insertionSortThreshold);
             } else {
                 final int[] left = Arrays.copyOfRange(array, 0, array.length / 2);
                 final int[] right = Arrays.copyOfRange(array, array.length / 2, array.length);
@@ -63,18 +64,20 @@ public class ParallelMergeSort2 {
     // using the "merge sort" algorithm, which splits the array in half,
     // recursively sorts the halves, then merges the sorted halves.
     // It is O(N log N) for all inputs.
-    private static void sequentialMergeSort(int[] a) {
-        if (a.length >= 2) {
+    private static void sequentialMergeSort(int[] array, int insertionSortThreshold) {
+        if (array.length >= insertionSortThreshold) {
             // split array in half
-            int[] left = Arrays.copyOfRange(a, 0, a.length / 2);
-            int[] right = Arrays.copyOfRange(a, a.length / 2, a.length);
+            int[] left = Arrays.copyOfRange(array, 0, array.length / 2);
+            int[] right = Arrays.copyOfRange(array, array.length / 2, array.length);
             
             // sort the halves
-            sequentialMergeSort(left);
-            sequentialMergeSort(right);
+            sequentialMergeSort(left, insertionSortThreshold);
+            sequentialMergeSort(right, insertionSortThreshold);
             
             // merge them back together
-            merge(left, right, a);
+            merge(left, right, array);
+        } else {
+            insertionSort(array, 0, array.length);
         }
     }
     

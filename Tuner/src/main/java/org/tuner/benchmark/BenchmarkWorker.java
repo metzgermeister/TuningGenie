@@ -57,6 +57,10 @@ class BenchmarkWorker {
     private Runtime runtime = Runtime.getRuntime();
     
     public static void main(String[] args) throws Exception {
+
+//        TODO pivanenko to not run from command line
+//        args = new String[]{Config.BENCHMARK_CONFIG_TO_RUN};
+        
         Validate.isTrue(args.length == 1, "unexpected arguments");
         
         BenchmarkUtils.cleanupBenchmarkCompletionFile();

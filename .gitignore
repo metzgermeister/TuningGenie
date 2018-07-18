@@ -12,3 +12,4 @@ reports
 *.ipr
 .idea
 /out
+*.DS_Store

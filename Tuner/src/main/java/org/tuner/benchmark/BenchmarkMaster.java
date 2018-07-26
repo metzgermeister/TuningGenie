@@ -1,10 +1,13 @@
 package org.tuner.benchmark;
 
 import com.google.common.collect.Lists;
+
+import org.apache.commons.io.IOUtils;
 import org.tuner.Config;
 import org.tuner.ParameterConfiguration;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -35,9 +38,15 @@ public class BenchmarkMaster {
         Runtime runtime = Runtime.getRuntime();
         
         BenchmarkUtils.cleanupBenchmarkCompletionFile();
-        String command = "java -cp " + executableJarPath + " org.tuner.benchmark.BenchmarkWorker " + pathToSerializedConfig;
-        runtime.exec(command);
-        
+        String command = "java -cp " + executableJarPath + " org.tuner.benchmark.BenchmarkWorker " + pathToSerializedConfig 
+            + " >> " + Config.WORKER_OUT;
+        Process exec = runtime.exec(command);
+
+//        Thread.sleep(1000);
+//        InputStream errorStream = exec.getErrorStream();
+//        System.out.println("~~~~~~~~~ error stream");
+//        IOUtils.copy(errorStream, System.out);
+
         System.out.println("triggered benchmark for batch " + partition);
         long partitionStart = new Date().getTime();
         while (!BenchmarkUtils.benchmarkCompleted()) {

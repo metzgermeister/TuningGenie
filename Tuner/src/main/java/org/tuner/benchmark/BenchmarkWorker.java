@@ -60,11 +60,12 @@ class BenchmarkWorker {
 
 //        TODO pivanenko to not run from command line
 //        args = new String[]{Config.BENCHMARK_CONFIG_TO_RUN};
-        
-        Validate.isTrue(args.length == 1, "unexpected arguments");
+//        Validate.isTrue(args.length == 1, "unexpected arguments");
+
+        System.out.println(" in Worker");
         
         BenchmarkUtils.cleanupBenchmarkCompletionFile();
-        String pathToBenchmarkConfig = args[0];
+        String pathToBenchmarkConfig = Config.BENCHMARK_CONFIG_TO_RUN;
         BenchmarkConfiguration config = BenchmarkUtils.read(pathToBenchmarkConfig, BenchmarkConfiguration.class);
         
         TermWare.getInstance().init(args);

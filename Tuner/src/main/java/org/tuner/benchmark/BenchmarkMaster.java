@@ -34,7 +34,7 @@ public class BenchmarkMaster {
         String pathToSerializedConfig = Config.BENCHMARK_CONFIG_TO_RUN;
         BenchmarkUtils.write(config, pathToSerializedConfig);
         
-        String executableJarPath = Config.projectDirectory + "Tuner/target/Tuner-1.0-jar-with-dependencies.jar";
+        String executableJarPath = Config.BENCHMARK_WORKING_DIRECTORY + "\\Tuner-1.0-jar-with-dependencies.jar";
         Runtime runtime = Runtime.getRuntime();
         
         BenchmarkUtils.cleanupBenchmarkCompletionFile();
